@@ -5,7 +5,10 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -54,6 +57,15 @@ public class ChooseAreaActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		SharedPreferences prefs = 
+				PreferenceManager.getDefaultSharedPreferences(this);
+		if(prefs.getBoolean("city_selected",false)){
+			Intent intent = new Intent(this,WeatherActivity.class);
+			startActivity(intent);
+			finish();
+			return;
+		}
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
 		
@@ -74,6 +86,13 @@ public class ChooseAreaActivity extends Activity {
 				} else if(currentLevel == LEVEL_CITY){
 					selectedCity = cityList.get(position);
 					queryCounties();
+				} else if(currentLevel == LEVEL_COUNTY){
+					String countyName = countyList.get(position).getCountyName();
+					Intent intent = new Intent(ChooseAreaActivity.this,
+													WeatherActivity.class);
+					intent.putExtra("county_name", countyName);
+					startActivity(intent);
+					finish();
 				}
 			}
 		});
@@ -150,7 +169,7 @@ public class ChooseAreaActivity extends Activity {
 			address = "http://www.weather.com.cn/data/list3/city.xml";
 		}
 		showProgressDialog();
-		HttpUtil.sendHttpResquest(address, new HttpCallbackListener() {
+		HttpUtil.sendHttpResquest(address, false,new HttpCallbackListener() {
 			
 			@Override
 			public void onFinish(String response) {
