@@ -1,22 +1,24 @@
 package com.yc.yechweather.activity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.yc.yechweather.R;
 import com.yc.yechweather.util.HttpCallbackListener;
 import com.yc.yechweather.util.HttpUtil;
 import com.yc.yechweather.util.Utility;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements OnClickListener {
 	private LinearLayout weatherInfoLayout;
 	// 用于显示城市名
 	private TextView cityNameText;
@@ -31,6 +33,12 @@ public class WeatherActivity extends Activity {
 	// 显示当前日期
 	private TextView currentDateText;
 
+	// 切换城市
+	private Button switchCity;
+
+	// 刷新天气
+	private Button refreshWeather;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,6 +52,11 @@ public class WeatherActivity extends Activity {
 		temp1Text = (TextView) findViewById(R.id.temp1);
 		temp2Text = (TextView) findViewById(R.id.temp2);
 		currentDateText = (TextView) findViewById(R.id.current_date);
+
+		switchCity = (Button) findViewById(R.id.switch_city);
+		refreshWeather = (Button) findViewById(R.id.refresh_weather);
+		switchCity.setOnClickListener(this);
+		refreshWeather.setOnClickListener(this);
 
 		String countyName = getIntent().getStringExtra("county_name");
 		if (!TextUtils.isEmpty(countyName)) {
@@ -64,7 +77,7 @@ public class WeatherActivity extends Activity {
 	 * 根据传入的地址和类型去向服务器查询天气代号或者天气信息
 	 */
 	private void queryFromServer(String address) {
-		HttpUtil.sendHttpResquest(address,false,new HttpCallbackListener() {
+		HttpUtil.sendHttpResquest(address, new HttpCallbackListener() {
 
 			@Override
 			public void onFinish(String response) {
@@ -83,10 +96,10 @@ public class WeatherActivity extends Activity {
 			public void onError(Exception e) {
 				e.printStackTrace();
 				runOnUiThread(new Runnable() {
-					
+
 					@Override
 					public void run() {
-						
+
 						publishText.setText("同步失败...");
 					}
 				});
@@ -94,7 +107,7 @@ public class WeatherActivity extends Activity {
 
 		});
 	}
-	
+
 	/**
 	 * 从 SharedPreferences 文件中读取存储的天气信息，并显示到界面上
 	 */
@@ -109,6 +122,32 @@ public class WeatherActivity extends Activity {
 		currentDateText.setText(prefs.getString("current_date", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.switch_city:
+			Intent intent = new Intent(this, ChooseAreaActivity.class);
+			intent.putExtra("from_weather_activity", true);
+			startActivity(intent);
+			finish();
+			break;
+
+		case R.id.refresh_weather:
+			publishText.setText("同步中...");
+			SharedPreferences prefs = PreferenceManager
+					.getDefaultSharedPreferences(this);
+			String cityName = prefs.getString("city_name", "");
+			if (!TextUtils.isEmpty(cityName)) {
+				String address = "http://wthrcdn.etouch.cn/weather_mini?city="
+						+ cityName;
+				queryFromServer(address);
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 }

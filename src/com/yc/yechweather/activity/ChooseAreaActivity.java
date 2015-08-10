@@ -54,12 +54,18 @@ public class ChooseAreaActivity extends Activity {
 	//当前选中的级别
 	private int currentLevel;
 	
+	//判断是否是从 WeatherActivity 跳转过来的(通过切换城市按钮)
+	private boolean isFromWeatherActivity;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		isFromWeatherActivity = 
+				getIntent().getBooleanExtra("from_weather_activity", false);
 		SharedPreferences prefs = 
 				PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("city_selected",false)){
+		
+		//选择了城市而且不是从 WeatherActivity 跳转过来的
+		if(prefs.getBoolean("city_selected",false) && !isFromWeatherActivity){
 			Intent intent = new Intent(this,WeatherActivity.class);
 			startActivity(intent);
 			finish();
@@ -169,7 +175,7 @@ public class ChooseAreaActivity extends Activity {
 			address = "http://www.weather.com.cn/data/list3/city.xml";
 		}
 		showProgressDialog();
-		HttpUtil.sendHttpResquest(address, false,new HttpCallbackListener() {
+		HttpUtil.sendHttpResquest(address,new HttpCallbackListener() {
 			
 			@Override
 			public void onFinish(String response) {
@@ -251,6 +257,11 @@ public class ChooseAreaActivity extends Activity {
 		} else if(currentLevel == LEVEL_CITY){
 			queryProvinces();
 		} else {
+			if(isFromWeatherActivity){
+				Intent intent = new Intent(this,WeatherActivity.class);
+				startActivity(intent);
+				finish();
+			}
 			finish();
 		}
 	}

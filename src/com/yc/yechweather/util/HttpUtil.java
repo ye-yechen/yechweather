@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.zip.GZIPInputStream;
 
 import android.util.Log;
 
@@ -17,17 +16,17 @@ public class HttpUtil {
 	 * @param address
 	 * @param listener
 	 */
-	public static void sendHttpResquest(final String address,final boolean isGZip,
+	public static void sendHttpResquest(final String address,
 			final HttpCallbackListener listener) {
 
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				
+
 				HttpURLConnection connection = null;
 				try {
-					System.out.println("-->"+address);
+					System.out.println("-->" + address);
 					URL url = new URL(address);
 					connection = (HttpURLConnection) url.openConnection();
 					connection.setRequestMethod("GET");
@@ -35,26 +34,15 @@ public class HttpUtil {
 					connection.setReadTimeout(8000);
 					String response = "";
 					if (connection.getResponseCode() == 200) {// 判断请求码是否是200码，否则失败
-					//	Log.d("data",connection.getContentEncoding());
 						InputStream is = connection.getInputStream(); // 获取输入流
-						if (isGZip) {
-							Log.i("data", ""+address);
-							GZIPInputStream in = new GZIPInputStream(is);
-							BufferedReader reader = new BufferedReader(
-									new InputStreamReader(in, "utf-8"));
-							String line = "";
-							while ((line = reader.readLine()) != null) {
-								response += line;
-							}
-						} else{
-							BufferedReader reader = new BufferedReader(
-									new InputStreamReader(is, "utf-8"));
-							String line = "";
-							while ((line = reader.readLine()) != null) {
-								response += line;
-							}
+						BufferedReader reader = new BufferedReader(
+								new InputStreamReader(is, "utf-8"));
+						String line = "";
+						while ((line = reader.readLine()) != null) {
+							response += line;
 						}
 					}
+
 					if (listener != null) {
 						// 回调 onFinish 方法
 						listener.onFinish(response);
@@ -62,7 +50,7 @@ public class HttpUtil {
 
 				} catch (Exception e) {
 					// 回调 onError()方法
-					Log.i("data", ""+e);
+					Log.i("data", "" + e);
 					listener.onError(e);
 				} finally {
 					if (connection != null) {
