@@ -10,7 +10,7 @@
 	<uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name="com.yc.yechweather.activity.WeatherActivity"></activity>
-    </application>
+   		<service android:name="com.yc.yechweather.service.AutoUpdateService"></service>
+   		<receiver android:name="com.yc.yechweather.receiver.AutoUpdateReceiver"></receiver>
+        </application>
 
 </manifest>

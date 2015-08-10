@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yc.yechweather.R;
+import com.yc.yechweather.service.AutoUpdateService;
 import com.yc.yechweather.util.HttpCallbackListener;
 import com.yc.yechweather.util.HttpUtil;
 import com.yc.yechweather.util.Utility;
@@ -118,10 +119,14 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		temp1Text.setText(prefs.getString("temp1", ""));
 		temp2Text.setText(prefs.getString("temp2", ""));
 		weatherDespText.setText(prefs.getString("weather_desp", ""));
-		publishText.setText(prefs.getString("publish_time", "") + "发布");
+		publishText.setText(prefs.getString("publish_time", "") + " 发布");
 		currentDateText.setText(prefs.getString("current_date", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+		
+		//启动 自动更新天气服务
+		Intent intent = new Intent(this,AutoUpdateService.class);
+		startService(intent);
 	}
 
 	@Override
