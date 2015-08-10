@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.yc.yechweather.R;
@@ -33,7 +36,8 @@ public class WeatherActivity extends Activity implements OnClickListener {
 	private TextView temp2Text;
 	// 显示当前日期
 	private TextView currentDateText;
-
+	// 显示当前温度
+	private TextView currentTempText;
 	// 切换城市
 	private Button switchCity;
 
@@ -47,18 +51,18 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.weather_layout);
 		// 初始化各控件
 		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
+		// weatherImage = (ImageView) findViewById(R.id.weather_image);
 		cityNameText = (TextView) findViewById(R.id.city_name);
 		publishText = (TextView) findViewById(R.id.publish_text);
 		weatherDespText = (TextView) findViewById(R.id.weather_desp);
 		temp1Text = (TextView) findViewById(R.id.temp1);
 		temp2Text = (TextView) findViewById(R.id.temp2);
 		currentDateText = (TextView) findViewById(R.id.current_date);
-
+		currentTempText = (TextView) findViewById(R.id.current_temp);
 		switchCity = (Button) findViewById(R.id.switch_city);
 		refreshWeather = (Button) findViewById(R.id.refresh_weather);
 		switchCity.setOnClickListener(this);
 		refreshWeather.setOnClickListener(this);
-
 		String countyName = getIntent().getStringExtra("county_name");
 		if (!TextUtils.isEmpty(countyName)) {
 			// 有县级代号时就去查询天气
@@ -121,12 +125,50 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		weatherDespText.setText(prefs.getString("weather_desp", ""));
 		publishText.setText(prefs.getString("publish_time", "") + " 发布");
 		currentDateText.setText(prefs.getString("current_date", ""));
+		currentTempText.setText(prefs.getString("current_temp", ""));
+		if (prefs.getString("weather_desp", "").equals("暴雨")
+				|| prefs.getString("weather_desp", "").equals("大雨")) {
+			setWeatherImage(R.drawable.bigrain);
+		} else if (prefs.getString("weather_desp", "").equals("雷阵雨")
+				|| prefs.getString("weather_desp", "").equals("阵雨")) {
+			setWeatherImage(R.drawable.lightningrain);
+		} else if (prefs.getString("weather_desp", "").equals("阴")) {
+			setWeatherImage(R.drawable.yintian);
+		} else if (prefs.getString("weather_desp", "").equals("多云")) {
+			setWeatherImage(R.drawable.duoyun);
+		} else if (prefs.getString("weather_desp", "").equals("晴")) {
+			setWeatherImage(R.drawable.sun);
+		} else if (prefs.getString("weather_desp", "").equals("小雨")) {
+			setWeatherImage(R.drawable.smallrain);
+		} else if (prefs.getString("weather_desp", "").contains("雪")) {
+			setWeatherImage(R.drawable.bigsnow);
+		} else if (prefs.getString("weather_desp", "").contains("雾")) {
+			setWeatherImage(R.drawable.fog);
+		}
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
-		
-		//启动 自动更新天气服务
-		Intent intent = new Intent(this,AutoUpdateService.class);
+
+		// 启动 自动更新天气服务
+		Intent intent = new Intent(this, AutoUpdateService.class);
 		startService(intent);
+	}
+
+	/**
+	 * 设置天气对应的图片
+	 * 
+	 * @param resId
+	 */
+	private void setWeatherImage(int resId) {
+		RelativeLayout layout = (RelativeLayout) findViewById(R.id.weather_type);
+		ImageView item = new ImageView(this);
+		item.setImageResource(resId);// 设置图片
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		lp.addRule(RelativeLayout.CENTER_IN_PARENT);// 与父容器的左侧对齐
+		lp.topMargin = 10;
+		item.setId(1);// 设置这个View 的id
+		item.setLayoutParams(lp);// 设置布局参数
+		layout.addView(item);// RelativeLayout添加子View
 	}
 
 	@Override
