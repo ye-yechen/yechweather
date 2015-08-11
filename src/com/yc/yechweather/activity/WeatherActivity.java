@@ -64,6 +64,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		switchCity.setOnClickListener(this);
 		refreshWeather.setOnClickListener(this);
 		String countyName = getIntent().getStringExtra("county_name");
+		String cityName = getIntent().getStringExtra("city_name");
 		if (!TextUtils.isEmpty(countyName)) {
 			// 有县级代号时就去查询天气
 			publishText.setText("同步中...");
@@ -75,6 +76,16 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		} else {
 			// 没有县级代号就直接显示本地存储的天气
 			showWeather();
+		}
+		//
+		if (!TextUtils.isEmpty(cityName)
+				|| getIntent().getBooleanExtra("isLocated", false)) {
+			publishText.setText("同步中...");
+			weatherInfoLayout.setVisibility(View.INVISIBLE);
+			cityNameText.setVisibility(View.INVISIBLE);
+			String address = "http://wthrcdn.etouch.cn/weather_mini?city="
+					+ cityName;
+			queryFromServer(address);
 		}
 	}
 
@@ -104,7 +115,6 @@ public class WeatherActivity extends Activity implements OnClickListener {
 
 					@Override
 					public void run() {
-
 						publishText.setText("同步失败...");
 					}
 				});
