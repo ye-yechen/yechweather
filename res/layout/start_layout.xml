@@ -10,13 +10,21 @@
         android:background="#484E61" >
 
         <Button
-            android:id="@+id/edit"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:id="@+id/set"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:background="@drawable/refresh" />
+            android:background="@drawable/set" />
+        <Button
+            android:id="@+id/home"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/home" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -50,6 +58,13 @@
         android:layout_weight="1"
         android:background="#27A5F9" >
          
+           <Button
+            android:id="@+id/add"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:background="@drawable/add" />
      </RelativeLayout>
 
 </LinearLayout>
