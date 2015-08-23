@@ -17,8 +17,9 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/set" />
+
         <Button
-            android:id="@+id/home"
+            android:id="@+id/re_locate"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
@@ -28,18 +29,19 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/citys_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="1"
         android:background="#27A5F9" >
 
         <TextView
             android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="当前定位城市: "
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
+            android:text="当前定位城市: "
             android:textColor="#fff"
             android:textSize="30sp" />
 
@@ -51,20 +53,34 @@
             android:textColor="#fff"
             android:textSize="30sp" />
     </RelativeLayout>
-    
-     <RelativeLayout
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:background="#27A5F9"
+         >
+
+        <ListView
+            android:id="@+id/selected_city"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </ListView>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#27A5F9" >
-         
-           <Button
+
+        <Button
             android:id="@+id/add"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_centerVertical="true"
             android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:background="@drawable/add" />
-     </RelativeLayout>
+    </RelativeLayout>
 
 </LinearLayout>

@@ -55,7 +55,7 @@ public class ChooseAreaActivity extends Activity {
 
 	// 判断是否是从 WeatherActivity 跳转过来的(通过切换城市按钮)
 	private boolean isFromWeatherActivity;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,8 +64,9 @@ public class ChooseAreaActivity extends Activity {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		// 选择了城市而且不是从 WeatherActivity 跳转过来的
-		if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity) {
+		// 选择了城市而且不是从 WeatherActivity 跳转过来的,而且不是添加城市
+		if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity 
+				&& !getIntent().getBooleanExtra("addCity", false)) {
 			Intent intent = new Intent(this, WeatherActivity.class);
 			startActivity(intent);
 			finish();
@@ -85,6 +86,7 @@ public class ChooseAreaActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+
 				if (currentLevel == LEVEL_PROVINCE) {
 					selectedProvince = provinceList.get(position);
 					queryCities();
@@ -94,11 +96,20 @@ public class ChooseAreaActivity extends Activity {
 				} else if (currentLevel == LEVEL_COUNTY) {
 					String countyName = countyList.get(position)
 							.getCountyName();
-					Intent intent = new Intent(ChooseAreaActivity.this,
-							WeatherActivity.class);
-					intent.putExtra("county_name", countyName);
-					startActivity(intent);
-					finish();
+					//如果是点击了添加城市按钮，则将添加后的城市添加到城市列表
+					if (getIntent().getBooleanExtra("addCity", false)) {
+						Intent intent = new Intent(ChooseAreaActivity.this,StartActivity.class);
+						intent.putExtra("add_success", true);
+						intent.putExtra("add_this_city", countyName);
+						startActivity(intent);
+						finish();
+					} else {
+						Intent intent = new Intent(ChooseAreaActivity.this,
+								WeatherActivity.class);
+						intent.putExtra("county_name", countyName);
+						startActivity(intent);
+						finish();
+					}
 				}
 			}
 		});
@@ -106,7 +117,6 @@ public class ChooseAreaActivity extends Activity {
 
 	}
 
-	
 	/**
 	 * 查询全国所有的县，优先从数据库查，没有就去服务器查
 	 */
