@@ -58,13 +58,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:background="#27A5F9"
-         >
+        android:background="#27A5F9" >
 
         <ListView
             android:id="@+id/selected_city"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent" 
+            android:divider="@null"  >
         </ListView>
     </RelativeLayout>
 

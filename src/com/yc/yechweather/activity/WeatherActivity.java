@@ -79,8 +79,8 @@ public class WeatherActivity extends Activity implements OnClickListener {
 								locatedCityName.length() - 1);
 					}
 					Log.i("data", "--" + locatedCityName);
-					Const.locatedCity = locatedCityName;
 					locationClient.stop();
+					Const.locatedCity = locatedCityName;
 
 					publishText.setText("同步中...");
 					weatherInfoLayout.setVisibility(View.INVISIBLE);
@@ -184,7 +184,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		currentDateText.setText(prefs.getString("current_date", ""));
 		currentTempText.setText(prefs.getString("current_temp", ""));
 		if (prefs.getString("weather_desp", "").equals("暴雨")
-				|| prefs.getString("weather_desp", "").equals("大雨") 
+				|| prefs.getString("weather_desp", "").equals("大雨")
 				|| prefs.getString("weather_desp", "").equals("中雨")) {
 			setWeatherImage(R.drawable.bigrain);
 		} else if (prefs.getString("weather_desp", "").equals("雷阵雨")
@@ -218,7 +218,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 	 */
 	private void setWeatherImage(int resId) {
 		RelativeLayout layout = (RelativeLayout) findViewById(R.id.weather_type);
-		//移除之前的图片
+		// 移除之前的图片
 		if (layout != null) {
 			layout.removeAllViews();
 		}
