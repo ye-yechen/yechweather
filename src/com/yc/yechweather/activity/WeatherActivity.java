@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -16,13 +17,20 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.LocationClientOption.LocationMode;
 import com.yc.yechweather.R;
 import com.yc.yechweather.service.AutoUpdateService;
+import com.yc.yechweather.util.Const;
 import com.yc.yechweather.util.HttpCallbackListener;
 import com.yc.yechweather.util.HttpUtil;
 import com.yc.yechweather.util.Utility;
 
 public class WeatherActivity extends Activity implements OnClickListener {
+	private LocationClient locationClient;// 定位SDK的核心类
 	private LinearLayout weatherInfoLayout;
 	// 用于显示城市名
 	private TextView cityNameText;
@@ -44,10 +52,48 @@ public class WeatherActivity extends Activity implements OnClickListener {
 	// 刷新天气
 	private Button refreshWeather;
 
+	// 定位的城市
+	private static String locatedCityName;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		/*
+		 * 百度定位
+		 */
+		// 如果不是添加城市(即 打开应用时进入的主 Activity)
+		if (!getIntent().getBooleanExtra("isAddCity", false)) {
+			locationClient = new LocationClient(getApplicationContext());
+			locationClient.registerLocationListener(new BDLocationListener() {
+
+				@Override
+				public void onReceiveLocation(BDLocation location) {
+					if (location.getLocType() == BDLocation.TypeGpsLocation) {// 通过GPS定位
+						locatedCityName = location.getCity();
+						locatedCityName = locatedCityName.substring(0,
+								locatedCityName.length() - 1);
+					} else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// 通过网络连接定位
+						locatedCityName = location.getCity();
+						locatedCityName = locatedCityName.substring(0,
+								locatedCityName.length() - 1);
+					}
+					Log.i("data", "--" + locatedCityName);
+					Const.locatedCity = locatedCityName;
+					locationClient.stop();
+
+					publishText.setText("同步中...");
+					weatherInfoLayout.setVisibility(View.INVISIBLE);
+					cityNameText.setVisibility(View.INVISIBLE);
+					String address = "http://wthrcdn.etouch.cn/weather_mini?city="
+							+ locatedCityName;
+					queryFromServer(address);
+					//
+				}
+			}); // 注册监听函数
+			initLocation();
+			locationClient.start();
+		}
 		setContentView(R.layout.weather_layout);
 		// 初始化各控件
 		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
@@ -61,6 +107,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		currentTempText = (TextView) findViewById(R.id.current_temp);
 		switchCity = (Button) findViewById(R.id.switch_city);
 		refreshWeather = (Button) findViewById(R.id.refresh_weather);
+
 		switchCity.setOnClickListener(this);
 		refreshWeather.setOnClickListener(this);
 		String countyName = getIntent().getStringExtra("county_name");
@@ -137,7 +184,8 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		currentDateText.setText(prefs.getString("current_date", ""));
 		currentTempText.setText(prefs.getString("current_temp", ""));
 		if (prefs.getString("weather_desp", "").equals("暴雨")
-				|| prefs.getString("weather_desp", "").equals("大雨")) {
+				|| prefs.getString("weather_desp", "").equals("大雨") 
+				|| prefs.getString("weather_desp", "").equals("中雨")) {
 			setWeatherImage(R.drawable.bigrain);
 		} else if (prefs.getString("weather_desp", "").equals("雷阵雨")
 				|| prefs.getString("weather_desp", "").equals("阵雨")) {
@@ -170,6 +218,10 @@ public class WeatherActivity extends Activity implements OnClickListener {
 	 */
 	private void setWeatherImage(int resId) {
 		RelativeLayout layout = (RelativeLayout) findViewById(R.id.weather_type);
+		//移除之前的图片
+		if (layout != null) {
+			layout.removeAllViews();
+		}
 		ImageView item = new ImageView(this);
 		item.setImageResource(resId);// 设置图片
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
@@ -185,7 +237,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.switch_city:
-			Intent intent = new Intent(this, ChooseAreaActivity.class);
+			Intent intent = new Intent(this, StartActivity.class);
 			intent.putExtra("from_weather_activity", true);
 			startActivity(intent);
 			finish();
@@ -205,6 +257,18 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * 初始化定位信息
+	 */
+	private void initLocation() {
+		LocationClientOption option = new LocationClientOption();
+		option.setLocationMode(LocationMode.Hight_Accuracy);// 设置高精度定位定位模式
+		option.setCoorType("bd09ll");// 设置百度经纬度坐标系格式
+		// option.setScanSpan(1000);// 设置发起定位请求的间隔时间为1000ms
+		option.setIsNeedAddress(true);// 反编译获得具体位置，只有网络定位才可以
+		locationClient.setLocOption(option);
 	}
 
 }

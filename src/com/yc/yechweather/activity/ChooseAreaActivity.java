@@ -64,8 +64,8 @@ public class ChooseAreaActivity extends Activity {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		// 选择了城市而且不是从 WeatherActivity 跳转过来的,而且不是添加城市
-		if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity 
+		// 选择了城市,而且不是添加城市
+		if (prefs.getBoolean("city_selected", false) 
 				&& !getIntent().getBooleanExtra("addCity", false)) {
 			Intent intent = new Intent(this, WeatherActivity.class);
 			startActivity(intent);
