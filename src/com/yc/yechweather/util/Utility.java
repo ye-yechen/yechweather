@@ -1,7 +1,14 @@
 package com.yc.yechweather.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
@@ -11,6 +18,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import com.yc.yechweather.model.City;
 import com.yc.yechweather.model.County;
@@ -133,4 +141,45 @@ public class Utility {
 		editor.putString("current_date", sdf.format(new Date()));
 		editor.commit();
 	}
+	
+	/**
+	 * 将 List 类型数据保存成String类型
+	 */
+	public static String list2String(List<HashMap<String, Object>> list)
+			throws IOException {
+		// 实例化一个ByteArrayOutputStream对象，用来装载压缩后的字节文件。
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		// 然后将得到的字符数据装载到ObjectOutputStream
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+				byteArrayOutputStream);
+		// writeObject 方法负责写入特定类的对象的状态，以便相应的 readObject 方法可以还原它
+		objectOutputStream.writeObject(list);
+		// 最后，用Base64.encode将字节文件转换成Base64编码保存在String中
+		String listString = new String(Base64.encode(
+				byteArrayOutputStream.toByteArray(), Base64.DEFAULT));
+		// 关闭objectOutputStream
+		objectOutputStream.close();
+		return listString;
+	}
+
+	/**
+	 * 将String还原成list
+	 * @param listString
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<HashMap<String, Object>> string2List(String listString) throws Exception {
+		byte[] mobileBytes = Base64.decode(listString.getBytes(),
+				Base64.DEFAULT);
+		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
+				mobileBytes);
+		ObjectInputStream objectInputStream = new ObjectInputStream(
+				byteArrayInputStream);
+		List<HashMap<String, Object>> list = 
+				(List<HashMap<String, Object>>) objectInputStream.readObject();
+		objectInputStream.close();
+		return list;
+	}
+
 }

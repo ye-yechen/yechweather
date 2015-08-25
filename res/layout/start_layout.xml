@@ -17,15 +17,26 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/set" />
+        
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ok"
+            android:visibility="gone" />
 
         <Button
-            android:id="@+id/re_locate"
+            android:id="@+id/cancle"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/home" />
+            android:background="@drawable/cancle" 
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <RelativeLayout
