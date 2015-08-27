@@ -30,10 +30,14 @@ import com.yc.yechweather.util.Utility;
 /**
  * 程序启动时的界面
  */
-public class StartActivity extends Activity {
-
-	// 定位按钮(重新定位)
-	// private Button reLocate;
+public class StartActivity extends Activity implements OnClickListener {
+	// 用于暂村image的id，便于在listview中删除
+	int flag[] = new int[100];
+	int selectedNum = 0;
+	// 确定按钮
+	private Button ok;
+	// 取消按钮
+	private Button cancle;
 	// 添加按钮(添加其他城市)
 	private Button add;
 	// 设置按钮
@@ -57,38 +61,18 @@ public class StartActivity extends Activity {
 		setContentView(R.layout.start_layout);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		currentLoc = (TextView) findViewById(R.id.current_location);
-		// reLocate = (Button) findViewById(R.id.re_locate);
+		ok = (Button) findViewById(R.id.ok);
+		cancle = (Button) findViewById(R.id.cancle);
 		add = (Button) findViewById(R.id.add);
 		set = (Button) findViewById(R.id.set);
 
 		cityListView = (ListView) findViewById(R.id.selected_city);
 
 		// 设置按钮，点击后在城市列表的每一项后添加删除图标
-		set.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-			     //全选遍历ListView的选项，每个选项就相当于布局配置文件中的RelativeLayout  
-			     for(int i = 0; i < cityListView.getCount(); i++){  
-			    	 RelativeLayout layout = 
-			    			 (RelativeLayout) cityListView.getAdapter().getView(i, null, null);  
-			    	 ImageView image = (ImageView) layout.getChildAt(0);
-			    	 //image.setImageResource(R.drawable.delete);
-			    	 image.setVisibility(View.VISIBLE);
-			    	 
-			     }
-			}
-		});
-		add.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(StartActivity.this,
-						ChooseAreaActivity.class);
-				intent.putExtra("addCity", true);
-				intent.putExtra("isFromStartActivity", true);
-				startActivity(intent);
-				finish();
-			}
-		});
+		set.setOnClickListener(this);
+		add.setOnClickListener(this);
+		ok.setOnClickListener(this);
+		cancle.setOnClickListener(this);
 		cityList = loadCityList(StartActivity.this);
 		simpleAdapter = new SimpleAdapter(this, cityList,// 需要绑定的数据
 				R.layout.city_list_item,// 每一行的布局
@@ -119,12 +103,90 @@ public class StartActivity extends Activity {
 			}
 		});
 		currentLoc.setText(Const.locatedCity);
-		currentLoc.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				locateToMain(Const.locatedCity);
+		currentLoc.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.ok:
+//			for (int i = 0; i < selectedNum; i++) {
+//				cityList.remove(flag[i]);
+//			}
+			saveCityList(StartActivity.this, cityList);
+//			simpleAdapter.notifyDataSetChanged();
+//			cityListView.invalidate();
+			cancle.setVisibility(View.GONE);
+			set.setVisibility(View.VISIBLE);
+			ok.setVisibility(View.GONE);
+			add.setVisibility(View.VISIBLE);
+			cityList = loadCityList(StartActivity.this);
+			simpleAdapter = new SimpleAdapter(this, cityList,// 需要绑定的数据
+					R.layout.city_list_item,// 每一行的布局
+					// 动态数组中的数据源的键对应到定义布局的View中
+					new String[] { "ItemImage", "ItemText" }, new int[] {
+							R.id.ItemImage, R.id.ItemText });
+			cityListView.setAdapter(simpleAdapter);// 为ListView绑定适配器
+			break;
+		case R.id.cancle:
+//			for (int i = 0; i < selectedNum; i++) {
+//				cityListView.getChildAt(flag[i]).setVisibility(View.VISIBLE);
+//			}
+			cityList = loadCityList(StartActivity.this);
+			simpleAdapter = new SimpleAdapter(this, cityList,// 需要绑定的数据
+					R.layout.city_list_item,// 每一行的布局
+					// 动态数组中的数据源的键对应到定义布局的View中
+					new String[] { "ItemImage", "ItemText" }, new int[] {
+							R.id.ItemImage, R.id.ItemText });
+			cityListView.setAdapter(simpleAdapter);// 为ListView绑定适配器
+			cancle.setVisibility(View.GONE);
+			set.setVisibility(View.VISIBLE);
+			ok.setVisibility(View.GONE);
+			add.setVisibility(View.VISIBLE);
+			break;
+		case R.id.set:
+			saveCityList(StartActivity.this, cityList);
+			selectedNum = 0;
+			cancle.setVisibility(View.VISIBLE);
+			set.setVisibility(View.GONE);
+			ok.setVisibility(View.VISIBLE);
+			add.setVisibility(View.GONE);
+			// 全选遍历ListView的选项，每个选项就相当于布局配置文件中的RelativeLayout
+			for (int i = 0; i < cityListView.getCount(); i++) {
+				RelativeLayout layout = (RelativeLayout) cityListView.getChildAt(i);
+				ImageView image = (ImageView) layout.getChildAt(0);
+				image.setId(i);
+				image.setVisibility(View.VISIBLE);
+				image.setFocusable(true);// 让image获得焦点
+				image.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						
+						cityList.remove(v.getId());
+						simpleAdapter.notifyDataSetChanged();
+						cityListView.invalidate();
+//						flag[selectedNum] = v.getId();
+//						cityListView.getChildAt(flag[selectedNum]).setVisibility(View.GONE);
+//						selectedNum++;
+					}
+				});
 			}
-		});
+			break;
+		case R.id.add:
+			Intent intent = new Intent(StartActivity.this,
+					ChooseAreaActivity.class);
+			intent.putExtra("addCity", true);
+			intent.putExtra("isFromStartActivity", true);
+			startActivity(intent);
+			finish();
+			break;
+		case R.id.current_location:
+			locateToMain(Const.locatedCity);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	/**
@@ -185,4 +247,5 @@ public class StartActivity extends Activity {
 		startActivity(intent);
 		finish();
 	}
+
 }
