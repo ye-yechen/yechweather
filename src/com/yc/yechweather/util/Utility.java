@@ -144,8 +144,9 @@ public class Utility {
 	
 	/**
 	 * 将 List 类型数据保存成String类型
+	 * @param <T>
 	 */
-	public static String list2String(List<HashMap<String, Object>> list)
+	public static <T> String list2String(List<T> list)
 			throws IOException {
 		// 实例化一个ByteArrayOutputStream对象，用来装载压缩后的字节文件。
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -164,12 +165,13 @@ public class Utility {
 
 	/**
 	 * 将String还原成list
+	 * @param <T>
 	 * @param listString
 	 * @return
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public static List<HashMap<String, Object>> string2List(String listString) throws Exception {
+	public static <T> List<T> string2List(String listString) throws Exception {
 		byte[] mobileBytes = Base64.decode(listString.getBytes(),
 				Base64.DEFAULT);
 		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
@@ -179,7 +181,7 @@ public class Utility {
 		List<HashMap<String, Object>> list = 
 				(List<HashMap<String, Object>>) objectInputStream.readObject();
 		objectInputStream.close();
-		return list;
+		return (List<T>) list;
 	}
 
 }

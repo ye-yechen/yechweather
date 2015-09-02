@@ -31,9 +31,6 @@ import com.yc.yechweather.util.Utility;
  * 程序启动时的界面
  */
 public class StartActivity extends Activity implements OnClickListener {
-	// 用于暂村image的id，便于在listview中删除
-	int flag[] = new int[100];
-	int selectedNum = 0;
 	// 确定按钮
 	private Button ok;
 	// 取消按钮
@@ -52,6 +49,13 @@ public class StartActivity extends Activity implements OnClickListener {
 	// 当前定位城市
 	private TextView currentLoc;
 
+	// 已添加的城市
+	List<String> addedCities = new ArrayList<String>();
+
+	SharedPreferences.Editor editor = null;
+
+	// 保存显示天气的fragment 的列表
+	// private List<Fragment> fragments = new ArrayList<Fragment>();
 	// // 判断是否是从 WeatherActivity 跳转过来的(通过切换城市按钮)
 	// private boolean isFromWeatherActivity;
 	@Override
@@ -59,6 +63,7 @@ public class StartActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.start_layout);
+		editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		currentLoc = (TextView) findViewById(R.id.current_location);
 		ok = (Button) findViewById(R.id.ok);
@@ -80,7 +85,6 @@ public class StartActivity extends Activity implements OnClickListener {
 				new String[] { "ItemImage", "ItemText" }, new int[] {
 						R.id.ItemImage, R.id.ItemText });
 		cityListView.setAdapter(simpleAdapter);// 为ListView绑定适配器
-		// System.out.println("cityList--->" + cityList);
 		// 从ChooseAreaActivity 选好了城市跳转过来
 		if (getIntent().getBooleanExtra("add_success", false)) {
 
@@ -110,12 +114,7 @@ public class StartActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ok:
-//			for (int i = 0; i < selectedNum; i++) {
-//				cityList.remove(flag[i]);
-//			}
 			saveCityList(StartActivity.this, cityList);
-//			simpleAdapter.notifyDataSetChanged();
-//			cityListView.invalidate();
 			cancle.setVisibility(View.GONE);
 			set.setVisibility(View.VISIBLE);
 			ok.setVisibility(View.GONE);
@@ -129,9 +128,6 @@ public class StartActivity extends Activity implements OnClickListener {
 			cityListView.setAdapter(simpleAdapter);// 为ListView绑定适配器
 			break;
 		case R.id.cancle:
-//			for (int i = 0; i < selectedNum; i++) {
-//				cityListView.getChildAt(flag[i]).setVisibility(View.VISIBLE);
-//			}
 			cityList = loadCityList(StartActivity.this);
 			simpleAdapter = new SimpleAdapter(this, cityList,// 需要绑定的数据
 					R.layout.city_list_item,// 每一行的布局
@@ -145,15 +141,15 @@ public class StartActivity extends Activity implements OnClickListener {
 			add.setVisibility(View.VISIBLE);
 			break;
 		case R.id.set:
-			saveCityList(StartActivity.this, cityList);
-			selectedNum = 0;
+			saveCityList(StartActivity.this, cityList);// 设置之前保存旧的状态
 			cancle.setVisibility(View.VISIBLE);
 			set.setVisibility(View.GONE);
 			ok.setVisibility(View.VISIBLE);
 			add.setVisibility(View.GONE);
 			// 全选遍历ListView的选项，每个选项就相当于布局配置文件中的RelativeLayout
 			for (int i = 0; i < cityListView.getCount(); i++) {
-				RelativeLayout layout = (RelativeLayout) cityListView.getChildAt(i);
+				RelativeLayout layout = (RelativeLayout) cityListView
+						.getChildAt(i);
 				ImageView image = (ImageView) layout.getChildAt(0);
 				image.setId(i);
 				image.setVisibility(View.VISIBLE);
@@ -161,13 +157,9 @@ public class StartActivity extends Activity implements OnClickListener {
 				image.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						
 						cityList.remove(v.getId());
 						simpleAdapter.notifyDataSetChanged();
 						cityListView.invalidate();
-//						flag[selectedNum] = v.getId();
-//						cityListView.getChildAt(flag[selectedNum]).setVisibility(View.GONE);
-//						selectedNum++;
 					}
 				});
 			}
@@ -221,6 +213,8 @@ public class StartActivity extends Activity implements OnClickListener {
 
 	/**
 	 * 读取城市列表
+	 * 
+	 * @param <T>
 	 */
 	public List<HashMap<String, Object>> loadCityList(Context context) {
 		SharedPreferences prefs = PreferenceManager
@@ -239,7 +233,7 @@ public class StartActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * 捕获 back 按键，根据当前的级别来判断，此时应该返回市列表、省列表还是直接退出
+	 * 捕获 back 按键
 	 */
 	@Override
 	public void onBackPressed() {
