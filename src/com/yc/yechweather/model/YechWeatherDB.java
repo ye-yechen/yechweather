@@ -11,26 +11,26 @@ import android.database.sqlite.SQLiteDatabase;
 import com.yc.yechweather.db.YechWeatherOpenHelper;
 
 /**
- * ·â×°³£ÓÃµÄÊı¾İ¿â²Ù×÷
+ * å°è£…å¸¸ç”¨çš„æ•°æ®åº“æ“ä½œ
  * @author Administrator
  *
  */
 public class YechWeatherDB {
 	
 	/**
-	 * Êı¾İ¿âÃû
+	 * æ•°æ®åº“å
 	 */
 	public static final String DB_NAME = "yech_weather";
 	
 	/**
-	 * Êı¾İ¿â°æ±¾
+	 * æ•°æ®åº“ç‰ˆæœ¬
 	 */
 	public static final int VERSION = 1;
 	
 	private static YechWeatherDB yechWeatherDB;
 	private static SQLiteDatabase db;
 	/**
-	 * ¹¹Ôìº¯ÊıË½ÓĞ»¯
+	 * æ„é€ å‡½æ•°ç§æœ‰åŒ–
 	 * @param context
 	 */
 	private YechWeatherDB(Context context){
@@ -40,7 +40,7 @@ public class YechWeatherDB {
 	}
 	
 	/**
-	 * »ñÈ¡ YechWeatherDB µÄÊµÀı£¬µ¥ÀıÀà±£Ö¤ÔÚÈ«¾Ö·¶Î§ÄÚÖ»ÓĞÒ»¸öÊµÀı
+	 * è·å– YechWeatherDB çš„å®ä¾‹ï¼Œå•ä¾‹ç±»ä¿è¯åœ¨å…¨å±€èŒƒå›´å†…åªæœ‰ä¸€ä¸ªå®ä¾‹
 	 * @param context
 	 * @return
 	 */
@@ -52,7 +52,7 @@ public class YechWeatherDB {
 	}
 	
 	/**
-	 * ½« Province ÊµÀı±£´æµ½Êı¾İ¿â
+	 * å°† Province å®ä¾‹ä¿å­˜åˆ°æ•°æ®åº“
 	 * @param province
 	 */
 	public void saveProvince(Province province){
@@ -65,7 +65,7 @@ public class YechWeatherDB {
 	}
 	
 	/**
-	 * ´ÓÊı¾İ¿â¶ÁÈ¡È«¹úËùÓĞµÄÊ¡·İĞÅÏ¢
+	 * ä»æ•°æ®åº“è¯»å–å…¨å›½æ‰€æœ‰çš„çœä»½ä¿¡æ¯
 	 * @return
 	 */
 	public List<Province> loadProvinces(){
@@ -89,7 +89,7 @@ public class YechWeatherDB {
 	}
 	
 	/**
-	 * ½« City ÊµÀı±£´æµ½Êı¾İ¿â
+	 * å°† City å®ä¾‹ä¿å­˜åˆ°æ•°æ®åº“
 	 * @param city
 	 */
 	public void saveCity(City city){
@@ -103,7 +103,7 @@ public class YechWeatherDB {
 	}
 	
 	/**
-	 * ´ÓÊı¾İ¿â¶ÁÈ¡Ö¸¶¨Ê¡·İµÄ³ÇÊĞĞÅÏ¢
+	 * ä»æ•°æ®åº“è¯»å–æŒ‡å®šçœä»½çš„åŸå¸‚ä¿¡æ¯
 	 * @param provinceId
 	 * @return
 	 */
@@ -131,7 +131,7 @@ public class YechWeatherDB {
 	}
 	
 	/**
-	 * ½« County ÊµÀı±£´æµ½Êı¾İ¿â
+	 * å°† County å®ä¾‹ä¿å­˜åˆ°æ•°æ®åº“
 	 */
 	public void saveCounty(County county){
 		if(county != null){
@@ -144,7 +144,7 @@ public class YechWeatherDB {
 	}
 	
 	/**
-	 * ´ÓÊı¾İ¿â¶ÁÈ¡Ö¸¶¨³ÇÊĞÏÂµÄÏØĞÅÏ¢
+	 * ä»æ•°æ®åº“è¯»å–æŒ‡å®šåŸå¸‚ä¸‹çš„å¿ä¿¡æ¯
 	 * @param cityId
 	 * @return
 	 */

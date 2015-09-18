@@ -2,7 +2,7 @@ package com.yc.yechweather.model;
 
 
 /**
- * ÏØ¼¶
+ * å¿çº§
  * 
  */
 public class County {

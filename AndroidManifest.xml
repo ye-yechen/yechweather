@@ -6,7 +6,8 @@
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="21" />
+         android:targetSdkVersion="21" 
+       />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 这个权限用于进行网络定位 -->

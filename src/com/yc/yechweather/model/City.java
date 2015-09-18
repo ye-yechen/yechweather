@@ -2,7 +2,7 @@ package com.yc.yechweather.model;
 
 
 /**
- * ³ÇÊĞÀà
+ * åŸå¸‚ç±»
  * @author Administrator
  *
  */

@@ -40,20 +40,20 @@ public class ChooseAreaActivity extends Activity {
 	private ArrayAdapter<String> adapter;
 	private YechWeatherDB yechWeatherDB;
 	private List<String> dataList = new ArrayList<String>();
-	// Ê¡ÁĞ±í
+	// çœåˆ—è¡¨
 	private List<Province> provinceList;
-	// ÊĞÁĞ±í
+	// å¸‚åˆ—è¡¨
 	private List<City> cityList;
-	// ÏØÁĞ±í
+	// å¿åˆ—è¡¨
 	private List<County> countyList;
-	// Ñ¡ÖĞµÄÊ¡·İ
+	// é€‰ä¸­çš„çœä»½
 	private Province selectedProvince;
-	// Ñ¡ÖĞµÄ³ÇÊĞ
+	// é€‰ä¸­çš„åŸå¸‚
 	private City selectedCity;
-	// µ±Ç°Ñ¡ÖĞµÄ¼¶±ğ
+	// å½“å‰é€‰ä¸­çš„çº§åˆ«
 	private int currentLevel;
 
-	// ÅĞ¶ÏÊÇ·ñÊÇ´Ó WeatherActivity Ìø×ª¹ıÀ´µÄ(Í¨¹ıÇĞ»»³ÇÊĞ°´Å¥)
+	// åˆ¤æ–­æ˜¯å¦æ˜¯ä» WeatherActivity è·³è½¬è¿‡æ¥çš„(é€šè¿‡åˆ‡æ¢åŸå¸‚æŒ‰é’®)
 	private boolean isFromStartActivity;
 
 	@Override
@@ -64,7 +64,7 @@ public class ChooseAreaActivity extends Activity {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		// Ñ¡ÔñÁË³ÇÊĞ,¶øÇÒ²»ÊÇÌí¼Ó³ÇÊĞ
+		// é€‰æ‹©äº†åŸå¸‚,è€Œä¸”ä¸æ˜¯æ·»åŠ åŸå¸‚
 		if (prefs.getBoolean("city_selected", false) 
 				&& !getIntent().getBooleanExtra("addCity", false)) {
 			Intent intent = new Intent(this, WeatherActivity.class);
@@ -96,7 +96,7 @@ public class ChooseAreaActivity extends Activity {
 				} else if (currentLevel == LEVEL_COUNTY) {
 					String countyName = countyList.get(position)
 							.getCountyName();
-					//Èç¹ûÊÇµã»÷ÁËÌí¼Ó³ÇÊĞ°´Å¥£¬Ôò½«Ìí¼ÓºóµÄ³ÇÊĞÌí¼Óµ½³ÇÊĞÁĞ±í
+					//å¦‚æœæ˜¯ç‚¹å‡»äº†æ·»åŠ åŸå¸‚æŒ‰é’®ï¼Œåˆ™å°†æ·»åŠ åçš„åŸå¸‚æ·»åŠ åˆ°åŸå¸‚åˆ—è¡¨
 					if (getIntent().getBooleanExtra("addCity", false)) {
 						Intent intent = new Intent(ChooseAreaActivity.this,StartActivity.class);
 						intent.putExtra("add_success", true);
@@ -118,7 +118,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	/**
-	 * ²éÑ¯È«¹úËùÓĞµÄÏØ£¬ÓÅÏÈ´ÓÊı¾İ¿â²é£¬Ã»ÓĞ¾ÍÈ¥·şÎñÆ÷²é
+	 * æŸ¥è¯¢å…¨å›½æ‰€æœ‰çš„å¿ï¼Œä¼˜å…ˆä»æ•°æ®åº“æŸ¥ï¼Œæ²¡æœ‰å°±å»æœåŠ¡å™¨æŸ¥
 	 */
 	private void queryCounties() {
 		countyList = yechWeatherDB.loadCounties(selectedCity.getId());
@@ -137,7 +137,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	/**
-	 * ²éÑ¯È«¹úËùÓĞµÄÊĞ£¬ÓÅÏÈ´ÓÊı¾İ¿â²é£¬Ã»ÓĞ¾ÍÈ¥·şÎñÆ÷²é
+	 * æŸ¥è¯¢å…¨å›½æ‰€æœ‰çš„å¸‚ï¼Œä¼˜å…ˆä»æ•°æ®åº“æŸ¥ï¼Œæ²¡æœ‰å°±å»æœåŠ¡å™¨æŸ¥
 	 */
 	private void queryCities() {
 		cityList = yechWeatherDB.loadCities(selectedProvince.getId());
@@ -156,7 +156,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	/**
-	 * ²éÑ¯È«¹úËùÓĞµÄÊ¡£¬ÓÅÏÈ´ÓÊı¾İ¿â²é£¬Ã»ÓĞ¾ÍÈ¥·şÎñÆ÷²é
+	 * æŸ¥è¯¢å…¨å›½æ‰€æœ‰çš„çœï¼Œä¼˜å…ˆä»æ•°æ®åº“æŸ¥ï¼Œæ²¡æœ‰å°±å»æœåŠ¡å™¨æŸ¥
 	 */
 	private void queryProvinces() {
 		provinceList = yechWeatherDB.loadProvinces();
@@ -167,7 +167,7 @@ public class ChooseAreaActivity extends Activity {
 			}
 			adapter.notifyDataSetChanged();
 			listView.setSelection(0);
-			titleText.setText("ÖĞ¹ú");
+			titleText.setText("ä¸­å›½");
 			currentLevel = LEVEL_PROVINCE;
 		} else {
 			queryFromServer(null, "province");
@@ -175,7 +175,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	/**
-	 * ¸ù¾İ´«ÈëµÄ´úºÅ´Ó·şÎñÆ÷²éÑ¯Ê¡ÊĞÏØÊı¾İ,²¢±£´æµ½Êı¾İ¿â
+	 * æ ¹æ®ä¼ å…¥çš„ä»£å·ä»æœåŠ¡å™¨æŸ¥è¯¢çœå¸‚å¿æ•°æ®,å¹¶ä¿å­˜åˆ°æ•°æ®åº“
 	 * 
 	 * @param code
 	 * @param type
@@ -205,7 +205,7 @@ public class ChooseAreaActivity extends Activity {
 							response, selectedCity.getId());
 				}
 				if (result) {
-					// Í¨¹ırunOnUiThread() ·½·¨»Øµ½Ö÷Ïß³Ì´¦ÀíÂß¼­
+					// é€šè¿‡runOnUiThread() æ–¹æ³•å›åˆ°ä¸»çº¿ç¨‹å¤„ç†é€»è¾‘
 					runOnUiThread(new Runnable() {
 
 						@Override
@@ -226,13 +226,13 @@ public class ChooseAreaActivity extends Activity {
 
 			@Override
 			public void onError(Exception e) {
-				// Í¨¹ırunOnUiThread() ·½·¨»Øµ½Ö÷Ïß³Ì´¦ÀíÂß¼­
+				// é€šè¿‡runOnUiThread() æ–¹æ³•å›åˆ°ä¸»çº¿ç¨‹å¤„ç†é€»è¾‘
 				runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
 						closeProgressDialog();
-						Toast.makeText(ChooseAreaActivity.this, "¼ÓÔØÊ§°Ü!",
+						Toast.makeText(ChooseAreaActivity.this, "åŠ è½½å¤±è´¥!",
 								Toast.LENGTH_SHORT).show();
 					}
 				});
@@ -241,19 +241,19 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	/**
-	 * ÏÔÊ¾½ø¶È¶Ô»°¿ò
+	 * æ˜¾ç¤ºè¿›åº¦å¯¹è¯æ¡†
 	 */
 	private void showProgressDialog() {
 		if (progressDialog == null) {
 			progressDialog = new ProgressDialog(this);
-			progressDialog.setMessage("ÕıÔÚ¼ÓÔØ...");
+			progressDialog.setMessage("æ­£åœ¨åŠ è½½...");
 			progressDialog.setCanceledOnTouchOutside(false);
 		}
 		progressDialog.show();
 	}
 
 	/**
-	 * ¹Ø±Õ¶Ô»°¿ò
+	 * å…³é—­å¯¹è¯æ¡†
 	 */
 	private void closeProgressDialog() {
 		if (progressDialog != null) {
@@ -262,7 +262,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	/**
-	 * ²¶»ñ back °´¼ü£¬¸ù¾İµ±Ç°µÄ¼¶±ğÀ´ÅĞ¶Ï£¬´ËÊ±Ó¦¸Ã·µ»ØÊĞÁĞ±í¡¢Ê¡ÁĞ±í»¹ÊÇÖ±½ÓÍË³ö
+	 * æ•è· back æŒ‰é”®ï¼Œæ ¹æ®å½“å‰çš„çº§åˆ«æ¥åˆ¤æ–­ï¼Œæ­¤æ—¶åº”è¯¥è¿”å›å¸‚åˆ—è¡¨ã€çœåˆ—è¡¨è¿˜æ˜¯ç›´æ¥é€€å‡º
 	 */
 	@Override
 	public void onBackPressed() {

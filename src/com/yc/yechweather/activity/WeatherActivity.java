@@ -1,132 +1,153 @@
 package com.yc.yechweather.activity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Window;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.LocationClientOption.LocationMode;
 import com.yc.yechweather.R;
 import com.yc.yechweather.adapter.MyFragmentAdapter;
 import com.yc.yechweather.fragment.CityWeatherFragment;
+import com.yc.yechweather.util.Const;
+import com.yc.yechweather.util.Utility;
 
 public class WeatherActivity extends FragmentActivity {
 
+	private LocationClient locationClient;// å®šä½ SDK æ ¸å¿ƒç±»
+	private static String locatedCityName;
 	MyFragmentAdapter adapter = null;
-	// ÒÑ¾­Ìí¼ÓµÄ³ÉÊĞÆ¬¶Î
+	// å·²ç»æ·»åŠ çš„æˆå¸‚ç‰‡æ®µ
 	List<Fragment> fragments = new ArrayList<Fragment>();
-	// ÒÑÌí¼ÓµÄ³ÇÊĞÃû³Æ
+	// å·²æ·»åŠ çš„åŸå¸‚åç§°
 	List<String> addedCities = new ArrayList<String>();
-
+	FragmentManager manager = getSupportFragmentManager();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		System.out.println("oncreat----");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		if (!getIntent().getBooleanExtra("isAddCity", false)) {
+			locationClient = new LocationClient(getApplicationContext());
+			locationClient.registerLocationListener(new BDLocationListener() {
+
+				@Override
+				public void onReceiveLocation(BDLocation location) {
+					if (location.getLocType() == BDLocation.TypeGpsLocation) {// Í¨ï¿½ï¿½GPSï¿½ï¿½Î»
+						locatedCityName = location.getCity();
+						locatedCityName = locatedCityName.substring(0,
+								locatedCityName.length() - 1);
+					} else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¶ï¿½Î»
+						locatedCityName = location.getCity();
+						locatedCityName = locatedCityName.substring(0,
+								locatedCityName.length() - 1);
+					}
+					Log.i("data", "------------" + locatedCityName);
+					locationClient.stop();
+					Const.locatedCity = locatedCityName;
+					Const.addedCity = locatedCityName;
+					addedCities.add(locatedCityName);
+					setLocatedFragment();
+				}
+			}); // ×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			initLocation();
+			locationClient.start();
+		}
 		setContentView(R.layout.main_acticity);
-		FragmentManager manager = getSupportFragmentManager();
-//		fragments = loadCityFragmentList(this);
-//		System.out.println("fragments: " + fragments);
-//		// µÚÒ»´Î½ø³ÌĞò
-//		if (fragments.size() == 0) {
-			CityWeatherFragment fragment = CityWeatherFragment.newInstance(null);
-			fragments.add(fragment);
-//			fragments.add(fragment);
-//			saveCityFragmentList(this, fragments);
-//		}
-//		// ÒÑ¾­Ìí¼ÓÁË³ÇÊĞ
-//		if (getIntent().getBooleanExtra("isAddCity", false)) {
-//			String cityName = getIntent().getStringExtra("city_name");
-//			addedCities = loadCityNameList(this);
-//			if (addedCities.size() == 0) {
-//				Bundle args = new Bundle();
-//				args.putString("cityName",cityName);
-//				CityWeatherFragment fragment = CityWeatherFragment.newInstance(args);
-//				fragments.add(fragment);
-//				saveCityFragmentList(this, fragments);
-//				addedCities.add(cityName);
-//				saveCityNameList(this, addedCities);
-//			}
-//			System.out.println("addedCities: " + addedCities);
-//			for (int i = 0; i < addedCities.size(); i++) {
-//				if (cityName.equals(addedCities.get(i))) {
-//					break;
-//				}
-//				if (i == addedCities.size()-1) {// ÁĞ±íÖĞÃ»ÓĞÕâ¸ö³ÇÊĞÃû³Æ
-//					Bundle args = new Bundle();
-//					args.putString("cityName",cityName);
-//					CityWeatherFragment fragment = CityWeatherFragment.newInstance(args);
-//					System.out.println("))))"+fragment.getArguments());
-//					fragments.add(fragment);
-//					saveCityFragmentList(this, fragments);
-//					addedCities.add(cityName);
-//					saveCityNameList(this, addedCities);
-//					break;
-//				}
-//			}
-//		}
+		
+	}
+	
+	/**
+	 * åˆæ¬¡è¿›å…¥æ—¶å®šä½å¾—åˆ°çš„åŸå¸‚fragment
+	 */
+	private void setLocatedFragment() {
+		CityWeatherFragment fragment = CityWeatherFragment.newInstance(null);
+		fragments.add(fragment);
 		adapter = new MyFragmentAdapter(manager, fragments);
-		// Éè¶¨ÊÊÅäÆ÷
+		// è®¾å®šé€‚é…å™¨
 		ViewPager vp = (ViewPager) findViewById(R.id.viewPager);
 		vp.setAdapter(adapter);
 	}
+	
+	/**
+	 * activity æ¢å¤æ—¶æ‰§è¡Œ
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		String cityName = data.getStringExtra("city_name");
+		
+		for (int i = 0; i < addedCities.size(); i++) {
+			if (cityName.equals(addedCities.get(i))) {
+				break;
+			}
+			if (i == addedCities.size()-1) {// åˆ—è¡¨ä¸­æ²¡æœ‰è¿™ä¸ªåŸå¸‚åç§°
+				Const.locatedCity = cityName;
+				CityWeatherFragment fragment = CityWeatherFragment.newInstance(null);
+				fragments.add(fragment);
+				addedCities.add(cityName);
+				adapter.notifyDataSetChanged();
+				saveCityNameList(this, addedCities);
+				break;
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	private void initLocation() {
+		LocationClientOption option = new LocationClientOption();
+		option.setLocationMode(LocationMode.Hight_Accuracy);// ï¿½ï¿½ï¿½Ã¸ß¾ï¿½ï¿½È¶ï¿½Î»ï¿½ï¿½Î»Ä£Ê½
+		option.setCoorType("bd09ll");// ï¿½ï¿½ï¿½Ã°Ù¶È¾ï¿½Î³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½Ê½
+		// option.setScanSpan(1000);// ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ê±ï¿½ï¿½Îª1000ms
+		option.setIsNeedAddress(true);// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¾ï¿½ï¿½ï¿½Î»ï¿½Ã£ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ç¶¨Î»ï¿½Å¿ï¿½ï¿½ï¿½
+		locationClient.setLocOption(option);
+	}
+	
+	/**
+	 * ä¿å­˜åŸå¸‚åï¼Œé˜²æ­¢é‡å¤ç”Ÿæˆfragment
+	 */
+	public boolean saveCityNameList(Context context, List<String> list) {
+		SharedPreferences.Editor editor = PreferenceManager
+				.getDefaultSharedPreferences(context).edit();
+		try {
+			String nameString = Utility.list2String(list);
+			editor.putString("nameString", nameString);
 
-//	private boolean saveCityFragmentList(Context context, List<Fragment> list) {
-//		SharedPreferences.Editor editor = PreferenceManager
-//				.getDefaultSharedPreferences(context).edit();
-//		try {
-//			String objString = Utility.list2String(list);
-//			editor.putString("objString", objString);
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		return editor.commit();
-//	}
-//
-//	private List<Fragment> loadCityFragmentList(Context context) {
-//		SharedPreferences prefs = PreferenceManager
-//				.getDefaultSharedPreferences(context);
-//		String objString = prefs.getString("objString", "");
-//		if (objString != "" && objString.length() > 0) {
-//			try {
-//				List<Fragment> list = Utility.string2List(objString);
-//				return list;
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return fragments;
-//	}
-//
-//	public boolean saveCityNameList(Context context, List<String> list) {
-//		SharedPreferences.Editor editor = PreferenceManager
-//				.getDefaultSharedPreferences(context).edit();
-//		try {
-//			String nameString = Utility.list2String(list);
-//			editor.putString("nameString", nameString);
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		return editor.commit();
-//	}
-//
-//	public List<String> loadCityNameList(Context context) {
-//		SharedPreferences prefs = PreferenceManager
-//				.getDefaultSharedPreferences(context);
-//		String nameString = prefs.getString("nameString", "");
-//		if (nameString != "" && nameString.length() > 0) {
-//			try {
-//				List<String> list = Utility.string2List(nameString);
-//				return list;
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return addedCities;
-//	}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return editor.commit();
+	}
+
+	/**
+	 * è¯»å–åŸå¸‚å
+	 */
+	public List<String> loadCityNameList(Context context) {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		String nameString = prefs.getString("nameString", "");
+		if (nameString != "" && nameString.length() > 0) {
+			try {
+				List<String> list = Utility.string2List(nameString);
+				return list;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return addedCities;
+	}
 }

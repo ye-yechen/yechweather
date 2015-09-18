@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,11 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.location.LocationClientOption.LocationMode;
 import com.yc.yechweather.R;
 import com.yc.yechweather.activity.StartActivity;
 import com.yc.yechweather.service.AutoUpdateService;
@@ -34,7 +28,7 @@ import com.yc.yechweather.util.HttpUtil;
 import com.yc.yechweather.util.Utility;
 
 /**
- * ÏÔÊ¾³ÇÊĞÌìÆøµÄfragment
+ * ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fragment
  * 
  * @author Administrator
  *
@@ -42,30 +36,30 @@ import com.yc.yechweather.util.Utility;
 public class CityWeatherFragment extends Fragment implements OnClickListener,
 		Serializable {
 	private static final long serialVersionUID = 1L;
-	private LocationClient locationClient;// ¶¨Î»SDKµÄºËĞÄÀà
+	//private LocationClient locationClient;// ï¿½ï¿½Î»SDKï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½
 	private LinearLayout weatherInfoLayout;
-	// ÓÃÓÚÏÔÊ¾³ÇÊĞÃû
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private TextView cityNameText;
-	// ÏÔÊ¾·¢²¼Ê±¼ä
+	// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 	private TextView publishText;
-	// ÏÔÊ¾ÌìÆøÃèÊöĞÅÏ¢
+	// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	private TextView weatherDespText;
-	// ÏÔÊ¾ÆøÎÂ1
+	// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½1
 	private TextView temp1Text;
-	// ÏÔÊ¾ÆøÎÂ2
+	// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½2
 	private TextView temp2Text;
-	// ÏÔÊ¾µ±Ç°ÈÕÆÚ
+	// ï¿½ï¿½Ê¾ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
 	private TextView currentDateText;
-	// ÏÔÊ¾µ±Ç°ÎÂ¶È
+	// ï¿½ï¿½Ê¾ï¿½ï¿½Ç°ï¿½Â¶ï¿½
 	private TextView currentTempText;
-	// ÇĞ»»³ÇÊĞ
+	// ï¿½Ğ»ï¿½ï¿½ï¿½ï¿½ï¿½
 	private Button switchCity;
 
-	// Ë¢ĞÂÌìÆø
+	// Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private Button refreshWeather;
 
-	// ¶¨Î»µÄ³ÇÊĞ
-	private static String locatedCityName;
+	// ï¿½ï¿½Î»ï¿½Ä³ï¿½ï¿½ï¿½
+	//private static String locatedCityName;
 	RelativeLayout layout;
 
 	public static CityWeatherFragment newInstance(Bundle args) {
@@ -78,78 +72,24 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.weather_layout, container, false);
-
-		/*
-		 * °Ù¶È¶¨Î»
-		 */
-		// Èç¹û²»ÊÇÌí¼Ó³ÇÊĞ(¼´ ´ò¿ªÓ¦ÓÃÊ±½øÈëµÄÖ÷ Activity)
-		if (!getActivity().getIntent().getBooleanExtra("isAddCity", false)) {
-			locationClient = new LocationClient(getActivity()
-					.getApplicationContext());
-			locationClient.registerLocationListener(new BDLocationListener() {
-
-				@Override
-				public void onReceiveLocation(BDLocation location) {
-					if (location.getLocType() == BDLocation.TypeGpsLocation) {// Í¨¹ıGPS¶¨Î»
-						locatedCityName = location.getCity();
-						locatedCityName = locatedCityName.substring(0,
-								locatedCityName.length() - 1);
-					} else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// Í¨¹ıÍøÂçÁ¬½Ó¶¨Î»
-						locatedCityName = location.getCity();
-						locatedCityName = locatedCityName.substring(0,
-								locatedCityName.length() - 1);
-					}
-					Log.i("data", "--" + locatedCityName);
-					locationClient.stop();
-					Const.locatedCity = locatedCityName;
-					publishText.setText("Í¬²½ÖĞ...");
-					weatherInfoLayout.setVisibility(View.INVISIBLE);
-					cityNameText.setVisibility(View.INVISIBLE);
-					String address = "http://wthrcdn.etouch.cn/weather_mini?city="
-							+ locatedCityName;
-					queryFromServer(address);
-					//
-				}
-			}); // ×¢²á¼àÌıº¯Êı
-			initLocation();
-			locationClient.start();
-		}
-		// ³õÊ¼»¯¸÷¿Ø¼ş
 		initView(view);
+		//å¦‚æœä¸æ˜¯æ·»åŠ åŸå¸‚
+		//if (!getActivity().getIntent().getBooleanExtra("isAddCity", false)) {
+		if(Const.locatedCity != ""){
+			publishText.setText("Í¬åŒæ­¥ä¸­...");
+			weatherInfoLayout.setVisibility(View.INVISIBLE);
+			cityNameText.setVisibility(View.INVISIBLE);
+			String address = "http://wthrcdn.etouch.cn/weather_mini?city="+Const.locatedCity;
+			queryFromServer(address);
+		}
 
 		switchCity.setOnClickListener(this);
 		refreshWeather.setOnClickListener(this);
-		String countyName = getActivity().getIntent().getStringExtra(
-				"county_name");
-		String cityName = getActivity().getIntent().getStringExtra("city_name");
-		if (!TextUtils.isEmpty(countyName)) {
-			// ÓĞÏØ¼¶´úºÅÊ±¾ÍÈ¥²éÑ¯ÌìÆø
-			publishText.setText("Í¬²½ÖĞ...");
-			weatherInfoLayout.setVisibility(View.INVISIBLE);
-			cityNameText.setVisibility(View.INVISIBLE);
-			String address = "http://wthrcdn.etouch.cn/weather_mini?city="
-					+ countyName;
-			queryFromServer(address);
-		} else {
-			// Ã»ÓĞÏØ¼¶´úºÅ¾ÍÖ±½ÓÏÔÊ¾±¾µØ´æ´¢µÄÌìÆø
-			showWeather();
-		}
-		//
-		if (!TextUtils.isEmpty(cityName)
-				|| getActivity().getIntent()
-						.getBooleanExtra("isLocated", false)) {
-			publishText.setText("Í¬²½ÖĞ...");
-			weatherInfoLayout.setVisibility(View.INVISIBLE);
-			cityNameText.setVisibility(View.INVISIBLE);
-			String address = "http://wthrcdn.etouch.cn/weather_mini?city="
-					+ cityName;
-			queryFromServer(address);
-		}
 		return view;
 	}
 
 	private void initView(View view) {
-		// ³õÊ¼»¯¸÷¿Ø¼ş
+		// ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½
 		weatherInfoLayout = (LinearLayout) view
 				.findViewById(R.id.weather_info_layout);
 		// weatherImage = (ImageView) findViewById(R.id.weather_image);
@@ -166,14 +106,14 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 	}
 
 	/**
-	 * ¸ù¾İ´«ÈëµÄµØÖ·ºÍÀàĞÍÈ¥Ïò·şÎñÆ÷²éÑ¯ÌìÆø´úºÅ»òÕßÌìÆøĞÅÏ¢
+	 * ï¿½ï¿½ï¿½İ´ï¿½ï¿½ï¿½Äµï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	 */
 	private void queryFromServer(String address) {
 		HttpUtil.sendHttpResquest(address, new HttpCallbackListener() {
 
 			@Override
 			public void onFinish(String response) {
-				// ´¦Àí·şÎñÆ÷·µ»ØµÄÌìÆøĞÅÏ¢
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 				Utility.handleWeatherResponse(getActivity(), response);
 				getActivity().runOnUiThread(new Runnable() {
 
@@ -191,7 +131,7 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 
 					@Override
 					public void run() {
-						publishText.setText("Í¬²½Ê§°Ü...");
+						publishText.setText("Í¬åŒæ­¥ä¸­...");
 					}
 				});
 			}
@@ -200,7 +140,7 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 	}
 
 	/**
-	 * ´Ó SharedPreferences ÎÄ¼şÖĞ¶ÁÈ¡´æ´¢µÄÌìÆøĞÅÏ¢£¬²¢ÏÔÊ¾µ½½çÃæÉÏ
+	 * ï¿½ï¿½ SharedPreferences ï¿½Ä¼ï¿½ï¿½Ğ¶ï¿½È¡ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æˆ‘ä»¬
 	 */
 	private void showWeather() {
 		SharedPreferences prefs = PreferenceManager
@@ -209,57 +149,58 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 		temp1Text.setText(prefs.getString("temp1", ""));
 		temp2Text.setText(prefs.getString("temp2", ""));
 		weatherDespText.setText(prefs.getString("weather_desp", ""));
-		publishText.setText(prefs.getString("publish_time", "") + " ·¢²¼");
+		publishText.setText(prefs.getString("publish_time", "") + " å‘å¸ƒ");
 		currentDateText.setText(prefs.getString("current_date", ""));
 		currentTempText.setText(prefs.getString("current_temp", ""));
-		if (prefs.getString("weather_desp", "").equals("±©Óê")
-				|| prefs.getString("weather_desp", "").equals("´óÓê")
-				|| prefs.getString("weather_desp", "").equals("ÖĞÓê")) {
+		if (prefs.getString("weather_desp", "").equals("å¤§é›¨")
+				|| prefs.getString("weather_desp", "").equals("æš´é›¨")
+				|| prefs.getString("weather_desp", "").equals("ä¸­é›¨")) {
 			setWeatherImage(R.drawable.bigrain);
-		} else if (prefs.getString("weather_desp", "").equals("À×ÕóÓê")
-				|| prefs.getString("weather_desp", "").equals("ÕóÓê")) {
+		} else if (prefs.getString("weather_desp", "").equals("é›·é˜µé›¨")
+				|| prefs.getString("weather_desp", "").equals("é˜µé›¨")) {
 			setWeatherImage(R.drawable.lightningrain);
-		} else if (prefs.getString("weather_desp", "").equals("Òõ")) {
+		} else if (prefs.getString("weather_desp", "").equals("é˜´")) {
 			setWeatherImage(R.drawable.yintian);
-		} else if (prefs.getString("weather_desp", "").equals("¶àÔÆ")) {
+		} else if (prefs.getString("weather_desp", "").equals("å¤šäº‘")) {
 			setWeatherImage(R.drawable.duoyun);
-		} else if (prefs.getString("weather_desp", "").equals("Çç")) {
+		} else if (prefs.getString("weather_desp", "").equals("æ™´")) {
 			setWeatherImage(R.drawable.sun);
-		} else if (prefs.getString("weather_desp", "").equals("Ğ¡Óê")) {
+		} else if (prefs.getString("weather_desp", "").equals("å°é›¨")) {
 			setWeatherImage(R.drawable.smallrain);
-		} else if (prefs.getString("weather_desp", "").contains("Ñ©")) {
+		} else if (prefs.getString("weather_desp", "").contains("é›ª")) {
 			setWeatherImage(R.drawable.bigsnow);
-		} else if (prefs.getString("weather_desp", "").contains("Îí")) {
+		} else if (prefs.getString("weather_desp", "").contains("é›¾") 
+				|| prefs.getString("weather_desp", "").contains("éœ¾")) {
 			setWeatherImage(R.drawable.fog);
 		}
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
 
-		// Æô¶¯ ×Ô¶¯¸üĞÂÌìÆø·şÎñ
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		Intent intent = new Intent(getActivity(), AutoUpdateService.class);
 		getActivity().startService(intent);
 	}
 
 	/**
-	 * ÉèÖÃÌìÆø¶ÔÓ¦µÄÍ¼Æ¬
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Í¼Æ¬
 	 * 
 	 * @param resId
 	 */
 	private void setWeatherImage(int resId) {
 
-		// ÒÆ³ıÖ®Ç°µÄÍ¼Æ¬
+		// ï¿½Æ³ï¿½Ö®Ç°ï¿½ï¿½Í¼Æ¬
 		if (layout != null) {
 			layout.removeAllViews();
 		}
 		ImageView item = new ImageView(getActivity());
-		item.setImageResource(resId);// ÉèÖÃÍ¼Æ¬
+		item.setImageResource(resId);// ï¿½ï¿½ï¿½ï¿½Í¼Æ¬
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		lp.addRule(RelativeLayout.CENTER_IN_PARENT);// Óë¸¸ÈİÆ÷µÄ×ó²à¶ÔÆë
+		lp.addRule(RelativeLayout.CENTER_IN_PARENT);// ï¿½ë¸¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		lp.topMargin = 10;
-		item.setId(1);// ÉèÖÃÕâ¸öView µÄid
-		item.setLayoutParams(lp);// ÉèÖÃ²¼¾Ö²ÎÊı
-		layout.addView(item);// RelativeLayoutÌí¼Ó×ÓView
+		item.setId(1);// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½View ï¿½ï¿½id
+		item.setLayoutParams(lp);// ï¿½ï¿½ï¿½Ã²ï¿½ï¿½Ö²ï¿½ï¿½ï¿½
+		layout.addView(item);// RelativeLayoutï¿½ï¿½ï¿½ï¿½ï¿½View
 	}
 
 	@Override
@@ -268,12 +209,13 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 		case R.id.switch_city:
 			Intent intent = new Intent(getActivity(), StartActivity.class);
 			intent.putExtra("from_weather_activity", true);
-			startActivity(intent);
-			getActivity().finish();
+			//startActivity(intent);
+			startActivityForResult(intent, 0);
+			//getActivity().finish();
 			break;
 
 		case R.id.refresh_weather:
-			publishText.setText("Í¬²½ÖĞ...");
+			publishText.setText("Í¬åŒæ­¥ä¸­...");
 			SharedPreferences prefs = PreferenceManager
 					.getDefaultSharedPreferences(getActivity());
 			String cityName = prefs.getString("city_name", "");
@@ -287,17 +229,6 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 			break;
 		}
 	}
-
-	/**
-	 * ³õÊ¼»¯¶¨Î»ĞÅÏ¢
-	 */
-	private void initLocation() {
-		LocationClientOption option = new LocationClientOption();
-		option.setLocationMode(LocationMode.Hight_Accuracy);// ÉèÖÃ¸ß¾«¶È¶¨Î»¶¨Î»Ä£Ê½
-		option.setCoorType("bd09ll");// ÉèÖÃ°Ù¶È¾­Î³¶È×ø±êÏµ¸ñÊ½
-		// option.setScanSpan(1000);// ÉèÖÃ·¢Æğ¶¨Î»ÇëÇóµÄ¼ä¸ôÊ±¼äÎª1000ms
-		option.setIsNeedAddress(true);// ·´±àÒë»ñµÃ¾ßÌåÎ»ÖÃ£¬Ö»ÓĞÍøÂç¶¨Î»²Å¿ÉÒÔ
-		locationClient.setLocOption(option);
-	}
+	
 
 }

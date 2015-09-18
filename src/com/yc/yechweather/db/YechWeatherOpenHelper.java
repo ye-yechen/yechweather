@@ -6,17 +6,17 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * ´´½¨ºÍÉı¼¶Êı¾İ¿â
- * id: ×ÔÔöÖ÷¼ü 
- * _name: Ãû³Æ
- * _code: ´úºÅ
+ * åˆ›å»ºå’Œå‡çº§æ•°æ®åº“
+ * id: è‡ªå¢ä¸»é”® 
+ * _name: åç§°
+ * _code: ä»£å·
  * @author Administrator
  *
  */
 public class YechWeatherOpenHelper extends SQLiteOpenHelper {
 
 	/**
-	 *  province ½¨±íÓï¾ä
+	 *  province å»ºè¡¨è¯­å¥
 	 */
 	public static final String CREATE_PROVINCE = "create table Province ("
 			+ "id integer primary key autoincrement, "
@@ -24,7 +24,7 @@ public class YechWeatherOpenHelper extends SQLiteOpenHelper {
 			+ "province_code text)";
 	
 	/**
-	 *  city ½¨±íÓï¾ä
+	 *  city å»ºè¡¨è¯­å¥
 	 */
 	public static final String CREATE_CITY = "create table City ("
 			+ "id integer primary key autoincrement, "
@@ -33,7 +33,7 @@ public class YechWeatherOpenHelper extends SQLiteOpenHelper {
 			+ "province_id integer)";
 	
 	/**
-	 *  county ½¨±íÓï¾ä
+	 *  county å»ºè¡¨è¯­å¥
 	 */
 	public static final String CREATE_COUNTY = "create table County ("
 			+ "id integer primary key autoincrement, "
@@ -49,9 +49,9 @@ public class YechWeatherOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(CREATE_PROVINCE);	//´´½¨ Province ±í
-		db.execSQL(CREATE_CITY);		//´´½¨ City ±í
-		db.execSQL(CREATE_COUNTY);		//´´½¨ County ±í
+		db.execSQL(CREATE_PROVINCE);	//åˆ›å»º Province è¡¨
+		db.execSQL(CREATE_CITY);		//åˆ›å»º City è¡¨
+		db.execSQL(CREATE_COUNTY);		//åˆ›å»º County è¡¨
 	}
 
 	@Override

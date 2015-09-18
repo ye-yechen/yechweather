@@ -28,36 +28,32 @@ import com.yc.yechweather.util.Const;
 import com.yc.yechweather.util.Utility;
 
 /**
- * ³ÌĞòÆô¶¯Ê±µÄ½çÃæ
+ * ç¨‹åºå¯åŠ¨æ—¶çš„ç•Œé¢
  */
 public class StartActivity extends Activity implements OnClickListener {
-	// È·¶¨°´Å¥
+	// ç¡®å®šæŒ‰é’®
 	private Button ok;
-	// È¡Ïû°´Å¥
+	// å–æ¶ˆæŒ‰é’®
 	private Button cancle;
-	// Ìí¼Ó°´Å¥(Ìí¼ÓÆäËû³ÇÊĞ)
+	// æ·»åŠ æŒ‰é’®(æ·»åŠ å…¶ä»–åŸå¸‚)
 	private Button add;
-	// ÉèÖÃ°´Å¥
+	// è®¾ç½®æŒ‰é’®
 	private Button set;
 	//
 	private ListView cityListView;
-	// Ìí¼ÓµÄ³ÇÊĞÁĞ±í
+	// æ·»åŠ çš„åŸå¸‚åˆ—è¡¨
 	private List<HashMap<String, Object>> cityList = new ArrayList<HashMap<String, Object>>();
-	// ListView µÄÊÊÅäÆ÷
+	// ListView çš„é€‚é…å™¨
 	private SimpleAdapter simpleAdapter;
 
-	// µ±Ç°¶¨Î»³ÇÊĞ
+	// å½“å‰å®šä½åŸå¸‚
 	private TextView currentLoc;
 
-	// ÒÑÌí¼ÓµÄ³ÇÊĞ
+	// å·²æ·»åŠ çš„åŸå¸‚
 	List<String> addedCities = new ArrayList<String>();
 
 	SharedPreferences.Editor editor = null;
 
-	// ±£´æÏÔÊ¾ÌìÆøµÄfragment µÄÁĞ±í
-	// private List<Fragment> fragments = new ArrayList<Fragment>();
-	// // ÅĞ¶ÏÊÇ·ñÊÇ´Ó WeatherActivity Ìø×ª¹ıÀ´µÄ(Í¨¹ıÇĞ»»³ÇÊĞ°´Å¥)
-	// private boolean isFromWeatherActivity;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,26 +69,26 @@ public class StartActivity extends Activity implements OnClickListener {
 
 		cityListView = (ListView) findViewById(R.id.selected_city);
 
-		// ÉèÖÃ°´Å¥£¬µã»÷ºóÔÚ³ÇÊĞÁĞ±íµÄÃ¿Ò»ÏîºóÌí¼ÓÉ¾³ıÍ¼±ê
+		// è®¾ç½®æŒ‰é’®ï¼Œç‚¹å‡»ååœ¨åŸå¸‚åˆ—è¡¨çš„æ¯ä¸€é¡¹åæ·»åŠ åˆ é™¤å›¾æ ‡
 		set.setOnClickListener(this);
 		add.setOnClickListener(this);
 		ok.setOnClickListener(this);
 		cancle.setOnClickListener(this);
 		cityList = loadCityList(StartActivity.this);
-		simpleAdapter = new SimpleAdapter(this, cityList,// ĞèÒª°ó¶¨µÄÊı¾İ
-				R.layout.city_list_item,// Ã¿Ò»ĞĞµÄ²¼¾Ö
-				// ¶¯Ì¬Êı×éÖĞµÄÊı¾İÔ´µÄ¼ü¶ÔÓ¦µ½¶¨Òå²¼¾ÖµÄViewÖĞ
+		simpleAdapter = new SimpleAdapter(this, cityList,// éœ€è¦ç»‘å®šçš„æ•°æ®
+				R.layout.city_list_item,// æ¯ä¸€è¡Œçš„å¸ƒå±€
+				// åŠ¨æ€æ•°ç»„ä¸­çš„æ•°æ®æºçš„é”®å¯¹åº”åˆ°å®šä¹‰å¸ƒå±€çš„Viewä¸­
 				new String[] { "ItemImage", "ItemText" }, new int[] {
 						R.id.ItemImage, R.id.ItemText });
-		cityListView.setAdapter(simpleAdapter);// ÎªListView°ó¶¨ÊÊÅäÆ÷
-		// ´ÓChooseAreaActivity Ñ¡ºÃÁË³ÇÊĞÌø×ª¹ıÀ´
+		cityListView.setAdapter(simpleAdapter);// ä¸ºListViewç»‘å®šé€‚é…å™¨
+		// ä»ChooseAreaActivity é€‰å¥½äº†åŸå¸‚è·³è½¬è¿‡æ¥
 		if (getIntent().getBooleanExtra("add_success", false)) {
 
 			String cityName = getIntent().getStringExtra("add_this_city");
-			map.put("ItemImage", R.drawable.delete);// ¼ÓÈëÍ¼Æ¬
+			map.put("ItemImage", R.drawable.delete);// åŠ å…¥å›¾ç‰‡
 			map.put("ItemText", cityName);
 			cityList.add(map);
-			// ±£´æ³ÇÊĞÁĞ±í
+			// ä¿å­˜åŸå¸‚åˆ—è¡¨
 			saveCityList(StartActivity.this, cityList);
 			simpleAdapter.notifyDataSetChanged();
 			cityListView.setSelection(0);
@@ -106,7 +102,7 @@ public class StartActivity extends Activity implements OnClickListener {
 				locateToMain(selectedCity);
 			}
 		});
-		currentLoc.setText(Const.locatedCity);
+		currentLoc.setText(Const.addedCity);
 		currentLoc.setOnClickListener(this);
 	}
 
@@ -120,40 +116,40 @@ public class StartActivity extends Activity implements OnClickListener {
 			ok.setVisibility(View.GONE);
 			add.setVisibility(View.VISIBLE);
 			cityList = loadCityList(StartActivity.this);
-			simpleAdapter = new SimpleAdapter(this, cityList,// ĞèÒª°ó¶¨µÄÊı¾İ
-					R.layout.city_list_item,// Ã¿Ò»ĞĞµÄ²¼¾Ö
-					// ¶¯Ì¬Êı×éÖĞµÄÊı¾İÔ´µÄ¼ü¶ÔÓ¦µ½¶¨Òå²¼¾ÖµÄViewÖĞ
+			simpleAdapter = new SimpleAdapter(this, cityList,// éœ€è¦ç»‘å®šçš„æ•°æ®
+					R.layout.city_list_item,// æ¯ä¸€è¡Œçš„å¸ƒå±€
+					// åŠ¨æ€æ•°ç»„ä¸­çš„æ•°æ®æºçš„é”®å¯¹åº”åˆ°å®šä¹‰å¸ƒå±€çš„Viewä¸­
 					new String[] { "ItemImage", "ItemText" }, new int[] {
 							R.id.ItemImage, R.id.ItemText });
-			cityListView.setAdapter(simpleAdapter);// ÎªListView°ó¶¨ÊÊÅäÆ÷
+			cityListView.setAdapter(simpleAdapter);// ä¸ºListViewç»‘å®šé€‚é…å™¨
 			break;
 		case R.id.cancle:
 			cityList = loadCityList(StartActivity.this);
-			simpleAdapter = new SimpleAdapter(this, cityList,// ĞèÒª°ó¶¨µÄÊı¾İ
-					R.layout.city_list_item,// Ã¿Ò»ĞĞµÄ²¼¾Ö
-					// ¶¯Ì¬Êı×éÖĞµÄÊı¾İÔ´µÄ¼ü¶ÔÓ¦µ½¶¨Òå²¼¾ÖµÄViewÖĞ
+			simpleAdapter = new SimpleAdapter(this, cityList,// éœ€è¦ç»‘å®šçš„æ•°æ®
+					R.layout.city_list_item,// æ¯ä¸€è¡Œçš„å¸ƒå±€
+					// åŠ¨æ€æ•°ç»„ä¸­çš„æ•°æ®æºçš„é”®å¯¹åº”åˆ°å®šä¹‰å¸ƒå±€çš„Viewä¸­
 					new String[] { "ItemImage", "ItemText" }, new int[] {
 							R.id.ItemImage, R.id.ItemText });
-			cityListView.setAdapter(simpleAdapter);// ÎªListView°ó¶¨ÊÊÅäÆ÷
+			cityListView.setAdapter(simpleAdapter);// ä¸ºListViewç»‘å®šé€‚é…å™¨
 			cancle.setVisibility(View.GONE);
 			set.setVisibility(View.VISIBLE);
 			ok.setVisibility(View.GONE);
 			add.setVisibility(View.VISIBLE);
 			break;
 		case R.id.set:
-			saveCityList(StartActivity.this, cityList);// ÉèÖÃÖ®Ç°±£´æ¾ÉµÄ×´Ì¬
+			saveCityList(StartActivity.this, cityList);// è®¾ç½®ä¹‹å‰ä¿å­˜æ—§çš„çŠ¶æ€
 			cancle.setVisibility(View.VISIBLE);
 			set.setVisibility(View.GONE);
 			ok.setVisibility(View.VISIBLE);
 			add.setVisibility(View.GONE);
-			// È«Ñ¡±éÀúListViewµÄÑ¡Ïî£¬Ã¿¸öÑ¡Ïî¾ÍÏàµ±ÓÚ²¼¾ÖÅäÖÃÎÄ¼şÖĞµÄRelativeLayout
-			for (int i = 0; i < cityListView.getCount(); i++) {
+			// å…¨é€‰éå†ListViewçš„é€‰é¡¹ï¼Œæ¯ä¸ªé€‰é¡¹å°±ç›¸å½“äºå¸ƒå±€é…ç½®æ–‡ä»¶ä¸­çš„RelativeLayout
+			for (int i = 0; i < cityListView.getChildCount(); i++) {
 				RelativeLayout layout = (RelativeLayout) cityListView
 						.getChildAt(i);
 				ImageView image = (ImageView) layout.getChildAt(0);
 				image.setId(i);
 				image.setVisibility(View.VISIBLE);
-				image.setFocusable(true);// ÈÃimage»ñµÃ½¹µã
+				image.setFocusable(true);// è®©imageè·å¾—ç„¦ç‚¹
 				image.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -173,7 +169,7 @@ public class StartActivity extends Activity implements OnClickListener {
 			finish();
 			break;
 		case R.id.current_location:
-			locateToMain(Const.locatedCity);
+			locateToMain(Const.addedCity);
 			break;
 
 		default:
@@ -182,19 +178,21 @@ public class StartActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ¶¨Î»ºóÖ±½Ó²éÑ¯¶ÔÓ¦³ÇÊĞµÄÌìÆøĞÅÏ¢
+	 * æŸ¥è¯¢å¯¹åº”åŸå¸‚çš„å¤©æ°”ä¿¡æ¯
 	 */
 	private void locateToMain(String cityName) {
-		Intent intent = new Intent(StartActivity.this, WeatherActivity.class);
+		
+		Intent intent = new Intent();
 		intent.putExtra("city_name", cityName);
 		intent.putExtra("isLocated", true);
 		intent.putExtra("isAddCity", true);
-		startActivity(intent);
+		setResult(RESULT_OK, intent);
+		//startActivity(intent);
 		finish();
 	}
 
 	/**
-	 * ±£´æ³ÇÊĞÁĞ±í
+	 * ä¿å­˜åŸå¸‚åˆ—è¡¨
 	 */
 	public boolean saveCityList(Context context,
 			List<HashMap<String, Object>> list) {
@@ -212,7 +210,7 @@ public class StartActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ¶ÁÈ¡³ÇÊĞÁĞ±í
+	 * è¯»å–åŸå¸‚åˆ—è¡¨
 	 * 
 	 * @param <T>
 	 */
@@ -233,7 +231,7 @@ public class StartActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * ²¶»ñ back °´¼ü
+	 * æ•è· back æŒ‰é”®
 	 */
 	@Override
 	public void onBackPressed() {

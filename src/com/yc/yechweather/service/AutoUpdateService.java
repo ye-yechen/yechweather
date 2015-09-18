@@ -32,20 +32,20 @@ public class AutoUpdateService extends Service {
 		}).start();
 		
 		/**
-		 * Éè¶¨¶¨Ê±ÈÎÎñ
+		 * è®¾å®šå®šæ—¶ä»»åŠ¡
 		 */
 		AlarmManager manager =(AlarmManager) getSystemService(ALARM_SERVICE);
-		int updateIntervel = 8 * 60 * 60 * 1000; //8Ğ¡Ê±µÄºÁÃëÊı
+		int updateIntervel = 8 * 60 * 60 * 1000; //8å°æ—¶çš„æ¯«ç§’æ•°
 		long trrigerAtTime = SystemClock.elapsedRealtime() + updateIntervel;
 		Intent i = new Intent(this,AutoUpdateReceiver.class);
 		PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
-		//²ÎÊıº¬Òå: ¹¤×÷ÀàĞÍ£¬´¥·¢Ê±¼ä£¬ÄÜ¹»Ö´ĞĞ¹ã²¥µÄ PendingIntent
+		//å‚æ•°å«ä¹‰: å·¥ä½œç±»å‹ï¼Œè§¦å‘æ—¶é—´ï¼Œèƒ½å¤Ÿæ‰§è¡Œå¹¿æ’­çš„ PendingIntent
 		manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, trrigerAtTime, pi);
 		return super.onStartCommand(intent, flags, startId);
 	}
 
 	/**
-	 * ¸üĞÂÌìÆøĞÅÏ¢
+	 * æ›´æ–°å¤©æ°”ä¿¡æ¯
 	 */
 	protected void updateWeather() {
 		SharedPreferences prefs = 

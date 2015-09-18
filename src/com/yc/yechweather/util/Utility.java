@@ -26,14 +26,14 @@ import com.yc.yechweather.model.Province;
 import com.yc.yechweather.model.YechWeatherDB;
 
 /**
- * ½âÎö´Ó·şÎñÆ÷·µ»ØµÄÊı¾İ
+ * è§£æä»æœåŠ¡å™¨è¿”å›çš„æ•°æ®
  * @author Administrator
  *
  */
 public class Utility {
 	
 	/**
-	 * ½âÎöºÍ´¦Àí·şÎñÆ÷·µ»ØµÄÊ¡¼¶Êı¾İ
+	 * è§£æå’Œå¤„ç†æœåŠ¡å™¨è¿”å›çš„çœçº§æ•°æ®
 	 */
 	public synchronized static boolean handleProvincesResponse(YechWeatherDB 
 			yechWeatherDB,String response){
@@ -45,7 +45,7 @@ public class Utility {
 					Province province = new Province();
 					province.setProvinceCode(arr[0]);
 					province.setProvinceName(arr[1]);
-					//½«½âÎö³öÀ´µÄÊı¾İ´æ´¢µ½ Province ±í
+					//å°†è§£æå‡ºæ¥çš„æ•°æ®å­˜å‚¨åˆ° Province è¡¨
 					yechWeatherDB.saveProvince(province);
 				}
 				return true;
@@ -55,7 +55,7 @@ public class Utility {
 	}
 	
 	/**
-	 * ½âÎöºÍ´¦Àí·şÎñÆ÷·µ»ØµÄÊĞ¼¶Êı¾İ
+	 * è§£æå’Œå¤„ç†æœåŠ¡å™¨è¿”å›çš„å¸‚çº§æ•°æ®
 	 */
 	public synchronized static boolean handleCitiesResponse(YechWeatherDB 
 			yechWeatherDB,String response,int provinceId){
@@ -68,7 +68,7 @@ public class Utility {
 					city.setCityCode(arr[0]);
 					city.setCityName(arr[1]);
 					city.setProvinceId(provinceId);
-					//½«½âÎö³öÀ´µÄÊı¾İ´æ´¢µ½ City ±í
+					//å°†è§£æå‡ºæ¥çš„æ•°æ®å­˜å‚¨åˆ° City è¡¨
 					yechWeatherDB.saveCity(city);
 				}
 				return true;
@@ -78,7 +78,7 @@ public class Utility {
 	}
 	
 	/**
-	 * ½âÎöºÍ´¦Àí·şÎñÆ÷·µ»ØµÄÏØ¼¶Êı¾İ
+	 * è§£æå’Œå¤„ç†æœåŠ¡å™¨è¿”å›çš„å¿çº§æ•°æ®
 	 */
 	public synchronized static boolean handleCountiesResponse(YechWeatherDB 
 			yechWeatherDB,String response,int cityId){
@@ -91,7 +91,7 @@ public class Utility {
 					county.setCountyCode(arr[0]);
 					county.setCountyName(arr[1]);
 					county.setCityId(cityId);
-					//½«½âÎö³öÀ´µÄÊı¾İ´æ´¢µ½ County ±í
+					//å°†è§£æå‡ºæ¥çš„æ•°æ®å­˜å‚¨åˆ° County è¡¨
 					yechWeatherDB.saveCounty(county);
 				}
 				return true;
@@ -101,7 +101,7 @@ public class Utility {
 	}
 	
 	/**
-	 * ½âÎö·şÎñÆ÷·µ»ØµÄ json Êı¾İ£¬²¢½«½âÎö³öµÄÊı¾İ±£´æµ½±¾µØ
+	 * è§£ææœåŠ¡å™¨è¿”å›çš„ json æ•°æ®ï¼Œå¹¶å°†è§£æå‡ºçš„æ•°æ®ä¿å­˜åˆ°æœ¬åœ°
 	 */
 	public static void handleWeatherResponse(Context context,String response){
 		try {
@@ -123,12 +123,12 @@ public class Utility {
 	}
 
 	/**
-	 * ½«·şÎñÆ÷·µ»ØµÄËùÓĞÌìÆøĞÅÏ¢´æ´¢µ½ SharedPreferences ÎÄ¼ş
+	 * å°†æœåŠ¡å™¨è¿”å›çš„æ‰€æœ‰å¤©æ°”ä¿¡æ¯å­˜å‚¨åˆ° SharedPreferences æ–‡ä»¶
 	 */
 	private static void saveWeatherInfo(Context context, String cityName,
 			String temp1, String temp2, String currentTemp,String weatherDesp,String publishTime) {
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyÄêMMÔÂddÈÕ",Locale.CHINA);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyå¹´MMæœˆddæ—¥",Locale.CHINA);
 		SharedPreferences.Editor editor =
 				PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putBoolean("city_selected", true);
@@ -143,28 +143,28 @@ public class Utility {
 	}
 	
 	/**
-	 * ½« List ÀàĞÍÊı¾İ±£´æ³ÉStringÀàĞÍ
+	 * å°† List ç±»å‹æ•°æ®ä¿å­˜æˆStringç±»å‹
 	 * @param <T>
 	 */
 	public static <T> String list2String(List<T> list)
 			throws IOException {
-		// ÊµÀı»¯Ò»¸öByteArrayOutputStream¶ÔÏó£¬ÓÃÀ´×°ÔØÑ¹ËõºóµÄ×Ö½ÚÎÄ¼ş¡£
+		// å®ä¾‹åŒ–ä¸€ä¸ªByteArrayOutputStreamå¯¹è±¡ï¼Œç”¨æ¥è£…è½½å‹ç¼©åçš„å­—èŠ‚æ–‡ä»¶ã€‚
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		// È»ºó½«µÃµ½µÄ×Ö·ûÊı¾İ×°ÔØµ½ObjectOutputStream
+		// ç„¶åå°†å¾—åˆ°çš„å­—ç¬¦æ•°æ®è£…è½½åˆ°ObjectOutputStream
 		ObjectOutputStream objectOutputStream = new ObjectOutputStream(
 				byteArrayOutputStream);
-		// writeObject ·½·¨¸ºÔğĞ´ÈëÌØ¶¨ÀàµÄ¶ÔÏóµÄ×´Ì¬£¬ÒÔ±ãÏàÓ¦µÄ readObject ·½·¨¿ÉÒÔ»¹Ô­Ëü
+		// writeObject æ–¹æ³•è´Ÿè´£å†™å…¥ç‰¹å®šç±»çš„å¯¹è±¡çš„çŠ¶æ€ï¼Œä»¥ä¾¿ç›¸åº”çš„ readObject æ–¹æ³•å¯ä»¥è¿˜åŸå®ƒ
 		objectOutputStream.writeObject(list);
-		// ×îºó£¬ÓÃBase64.encode½«×Ö½ÚÎÄ¼ş×ª»»³ÉBase64±àÂë±£´æÔÚStringÖĞ
+		// æœ€åï¼Œç”¨Base64.encodeå°†å­—èŠ‚æ–‡ä»¶è½¬æ¢æˆBase64ç¼–ç ä¿å­˜åœ¨Stringä¸­
 		String listString = new String(Base64.encode(
 				byteArrayOutputStream.toByteArray(), Base64.DEFAULT));
-		// ¹Ø±ÕobjectOutputStream
+		// å…³é—­objectOutputStream
 		objectOutputStream.close();
 		return listString;
 	}
 
 	/**
-	 * ½«String»¹Ô­³Élist
+	 * å°†Stringè¿˜åŸæˆlist
 	 * @param <T>
 	 * @param listString
 	 * @return

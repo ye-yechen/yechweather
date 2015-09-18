@@ -10,9 +10,9 @@ public class AutoUpdateReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		//Ò»µ©Æô¶¯ÁË AutoUpdateService£¬¾Í»áÔÚ onStartCommand ·½·¨ÖĞÉè¶¨
-		//Ò»¸ö¶¨Ê±ÈÎÎñ£¬ÕâÑùÔÚ8Ğ¡Ê±ºó AutoUpdateReceiver µÄ onReceive ·½·¨
-		//¾Í»áµÃµ½Ö´ĞĞ£¬¶øÕâ¸ö·½·¨»áÔÙ´ÎÆô¶¯ AutoUpdateService£¬ĞÎ³ÉÑ­»·
+		//ä¸€æ—¦å¯åŠ¨äº† AutoUpdateServiceï¼Œå°±ä¼šåœ¨ onStartCommand æ–¹æ³•ä¸­è®¾å®š
+		//ä¸€ä¸ªå®šæ—¶ä»»åŠ¡ï¼Œè¿™æ ·åœ¨8å°æ—¶å AutoUpdateReceiver çš„ onReceive æ–¹æ³•
+		//å°±ä¼šå¾—åˆ°æ‰§è¡Œï¼Œè€Œè¿™ä¸ªæ–¹æ³•ä¼šå†æ¬¡å¯åŠ¨ AutoUpdateServiceï¼Œå½¢æˆå¾ªç¯
 		Intent i = new Intent(context,AutoUpdateService.class);
 		context.startActivity(i);
 	}

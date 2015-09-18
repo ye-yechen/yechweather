@@ -2,14 +2,14 @@ package com.yc.yechweather.model;
 
 
 /**
- * Ê¡·İÀà
+ * çœä»½ç±»
  * @author Administrator
  *
  */
 public class Province {
 	private int id;
-	private String provinceName;//Ê¡·İÃû³Æ
-	private String provinceCode;//Ê¡·İ´úÂë
+	private String provinceName;//çœä»½åç§°
+	private String provinceCode;//çœä»½ä»£ç 
 	public int getId() {
 		return id;
 	}

@@ -11,7 +11,7 @@ import android.util.Log;
 public class HttpUtil {
 
 	/**
-	 * ´Ó·şÎñÆ÷»ñÈ¡Êı¾İ
+	 * ä»æœåŠ¡å™¨è·å–æ•°æ®
 	 * 
 	 * @param address
 	 * @param listener
@@ -33,8 +33,8 @@ public class HttpUtil {
 					connection.setConnectTimeout(8000);
 					connection.setReadTimeout(8000);
 					String response = "";
-					if (connection.getResponseCode() == 200) {// ÅĞ¶ÏÇëÇóÂëÊÇ·ñÊÇ200Âë£¬·ñÔòÊ§°Ü
-						InputStream is = connection.getInputStream(); // »ñÈ¡ÊäÈëÁ÷
+					if (connection.getResponseCode() == 200) {// åˆ¤æ–­è¯·æ±‚ç æ˜¯å¦æ˜¯200ç ï¼Œå¦åˆ™å¤±è´¥
+						InputStream is = connection.getInputStream(); // è·å–è¾“å…¥æµ
 						BufferedReader reader = new BufferedReader(
 								new InputStreamReader(is, "utf-8"));
 						String line = "";
@@ -44,12 +44,12 @@ public class HttpUtil {
 					}
 
 					if (listener != null) {
-						// »Øµ÷ onFinish ·½·¨
+						// å›è°ƒ onFinish æ–¹æ³•
 						listener.onFinish(response);
 					}
 
 				} catch (Exception e) {
-					// »Øµ÷ onError()·½·¨
+					// å›è°ƒ onError()æ–¹æ³•
 					Log.i("data", "" + e);
 					listener.onError(e);
 				} finally {

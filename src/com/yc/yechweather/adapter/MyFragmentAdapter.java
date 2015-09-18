@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
- * viewPager µÄÊÊÅäÆ÷
- * ÓĞ×´Ì¬µÄ £¬Ö»»áÓĞÇ°3¸ö´æÔÚÆäËûÏú»Ù£¬  Ç°1¸ö£¬ ÖĞ¼ä£¬ ÏÂ1¸ö 
+ * viewPager çš„é€‚é…å™¨
+ * æœ‰çŠ¶æ€çš„ ï¼Œåªä¼šæœ‰å‰3ä¸ªå­˜åœ¨å…¶ä»–é”€æ¯ï¼Œ  å‰1ä¸ªï¼Œ ä¸­é—´ï¼Œ ä¸‹1ä¸ª 
  */
 public class MyFragmentAdapter extends FragmentStatePagerAdapter {
 
