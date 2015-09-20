@@ -31,12 +31,11 @@ import com.yc.yechweather.util.Utility;
  * ��ʾ����������fragment
  * 
  * @author Administrator
- *
+ * 
  */
 public class CityWeatherFragment extends Fragment implements OnClickListener,
 		Serializable {
 	private static final long serialVersionUID = 1L;
-	//private LocationClient locationClient;// ��λSDK�ĺ�����
 	private LinearLayout weatherInfoLayout;
 	// ������ʾ������
 	private TextView cityNameText;
@@ -59,27 +58,44 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 	private Button refreshWeather;
 
 	// ��λ�ĳ���
-	//private static String locatedCityName;
+	// private static String locatedCityName;
 	RelativeLayout layout;
-
+	private View view;
 	public static CityWeatherFragment newInstance(Bundle args) {
 		CityWeatherFragment f = new CityWeatherFragment();
 		f.setArguments(args);
 		return f;
 	}
-
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.weather_layout, container, false);
-		initView(view);
-		//如果不是添加城市
-		//if (!getActivity().getIntent().getBooleanExtra("isAddCity", false)) {
-		if(Const.locatedCity != ""){
+		
+		if (null != view) {
+			ViewGroup parent = (ViewGroup) view.getParent();
+			if (null != parent) {
+				parent.removeView(view);
+			}
+		} else {
+			view = inflater.inflate(R.layout.weather_layout, container, false);
+			initView(view);// 控件初始化
+		}
+		System.out.println("onCreateView--------" + Const.locatedCity);
+		// view = inflater.inflate(R.layout.weather_layout, container, false);
+		// initView(view);
+		// 如果不是添加城市
+		// if (!getActivity().getIntent().getBooleanExtra("isAddCity", false)) {
+		if (getArguments().getString("selectedCityName") != null) {
 			publishText.setText("ͬ同步中...");
 			weatherInfoLayout.setVisibility(View.INVISIBLE);
 			cityNameText.setVisibility(View.INVISIBLE);
-			String address = "http://wthrcdn.etouch.cn/weather_mini?city="+Const.locatedCity;
+			String address = "http://wthrcdn.etouch.cn/weather_mini?city="
+					+ getArguments().getString("selectedCityName");
 			queryFromServer(address);
 		}
 
@@ -169,7 +185,7 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 			setWeatherImage(R.drawable.smallrain);
 		} else if (prefs.getString("weather_desp", "").contains("雪")) {
 			setWeatherImage(R.drawable.bigsnow);
-		} else if (prefs.getString("weather_desp", "").contains("雾") 
+		} else if (prefs.getString("weather_desp", "").contains("雾")
 				|| prefs.getString("weather_desp", "").contains("霾")) {
 			setWeatherImage(R.drawable.fog);
 		}
@@ -209,9 +225,9 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 		case R.id.switch_city:
 			Intent intent = new Intent(getActivity(), StartActivity.class);
 			intent.putExtra("from_weather_activity", true);
-			//startActivity(intent);
+			// startActivity(intent);
 			startActivityForResult(intent, 0);
-			//getActivity().finish();
+			// getActivity().finish();
 			break;
 
 		case R.id.refresh_weather:
@@ -229,6 +245,5 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 			break;
 		}
 	}
-	
 
 }
