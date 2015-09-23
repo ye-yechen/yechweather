@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -34,7 +37,8 @@ import com.yc.yechweather.util.Utility;
  * 
  */
 public class CityWeatherFragment extends Fragment implements OnClickListener,
-		Serializable {
+		Serializable
+{
 	private static final long serialVersionUID = 1L;
 	private LinearLayout weatherInfoLayout;
 	// ������ʾ������
@@ -57,25 +61,27 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 	// ˢ������
 	private Button refreshWeather;
 
-	// ��λ�ĳ���
-	// private static String locatedCityName;
-	RelativeLayout layout;
+	//define fragment
+	private TodayFragment mtodayFragment;   //主页面
+	private ForecastFragment  mForecastFragment;      //发现页面
+	private SetFragment  mSetFragment; //个人中心页面
+	// define fragment view
+	private View mIndexLayout;
+	private View mSeekLayout;
+	private View mMineLayout;
+	private RelativeLayout layout;
 	private View view;
+	private FragmentManager mFragmentManager; //管理器
 	public static CityWeatherFragment newInstance(Bundle args) {
 		CityWeatherFragment f = new CityWeatherFragment();
 		f.setArguments(args);
 		return f;
 	}
-	
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		if (null != view) {
 			ViewGroup parent = (ViewGroup) view.getParent();
 			if (null != parent) {
@@ -84,12 +90,9 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 		} else {
 			view = inflater.inflate(R.layout.weather_layout, container, false);
 			initView(view);// 控件初始化
+			mFragmentManager = getChildFragmentManager();
+			setTabSelection(0);
 		}
-		System.out.println("onCreateView--------" + Const.locatedCity);
-		// view = inflater.inflate(R.layout.weather_layout, container, false);
-		// initView(view);
-		// 如果不是添加城市
-		// if (!getActivity().getIntent().getBooleanExtra("isAddCity", false)) {
 		if (getArguments().getString("selectedCityName") != null) {
 			publishText.setText("ͬ同步中...");
 			weatherInfoLayout.setVisibility(View.INVISIBLE);
@@ -99,15 +102,13 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 			queryFromServer(address);
 		}
 
-		switchCity.setOnClickListener(this);
-		refreshWeather.setOnClickListener(this);
 		return view;
 	}
 
 	private void initView(View view) {
 		// ��ʼ�����ؼ�
-		weatherInfoLayout = (LinearLayout) view
-				.findViewById(R.id.weather_info_layout);
+		weatherInfoLayout = 
+				(LinearLayout) view.findViewById(R.id.weather_info_layout);
 		// weatherImage = (ImageView) findViewById(R.id.weather_image);
 		cityNameText = (TextView) view.findViewById(R.id.city_name);
 		publishText = (TextView) view.findViewById(R.id.publish_text);
@@ -119,6 +120,16 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 		switchCity = (Button) view.findViewById(R.id.switch_city);
 		refreshWeather = (Button) view.findViewById(R.id.refresh_weather);
 		layout = (RelativeLayout) view.findViewById(R.id.weather_type);
+		mIndexLayout = view.findViewById(R.id.menu_item_index_layout);
+    	mSeekLayout = view.findViewById(R.id.menu_item_seek_layout);
+    	mMineLayout = view.findViewById(R.id.menu_item_mine_layout);
+    
+    	//设置监听事件
+    	switchCity.setOnClickListener(this);
+		refreshWeather.setOnClickListener(this);
+    	mIndexLayout.setOnClickListener(this);
+    	mSeekLayout.setOnClickListener(this);
+    	mMineLayout.setOnClickListener(this);
 	}
 
 	/**
@@ -241,9 +252,71 @@ public class CityWeatherFragment extends Fragment implements OnClickListener,
 				queryFromServer(address);
 			}
 			break;
+		case R.id.menu_item_index_layout:
+			setTabSelection(0);
+			break;
+		case R.id.menu_item_seek_layout:
+			setTabSelection(1);
+			break;
+		case R.id.menu_item_mine_layout:
+			setTabSelection(2);
+			break;
 		default:
 			break;
 		}
 	}
+	
+	 private void setTabSelection(int index) {  
+		
+	      FragmentTransaction transaction = mFragmentManager.beginTransaction();  
+	       
+	       hideFragments(transaction);  
+	       switch (index) {  
+	       case 0:  
+//	    	   if(mtodayFragment == null){	   	
+//	    		   mtodayFragment = TodayFragment.newInstance(null);
+//	           	transaction.add(R.id.content, mtodayFragment);
+//	           	Toast.makeText(getActivity(), "today", Toast.LENGTH_SHORT).show();
+//	           } else { 
+//	               transaction.show(mtodayFragment);  
+//	           }  
+	           break;
+	       case 1: 
+	           if (mForecastFragment == null) {  
+	               
+	        	   mForecastFragment = ForecastFragment.newInstance(null);  
+	               transaction.add(R.id.content, mForecastFragment);  
+	               Toast.makeText(getActivity(), "forecast", Toast.LENGTH_SHORT).show();
+	           } else {  
+	               transaction.show(mForecastFragment);  
+	           }  
+	           break;  
+	       case 2:    
+	           if (mSetFragment == null) {  
+	        	   mSetFragment = SetFragment.newInstance(null);
+	               transaction.add(R.id.content, mSetFragment);  
+	               Toast.makeText(getActivity(), "set", Toast.LENGTH_SHORT).show();
+	           } else {  
+	               transaction.show(mSetFragment);  
+	           }  
+	           break;  
+	       default:
+	           	break;
+	       }  
+	       transaction.commit();  
+	   }
+
+	    private void hideFragments(FragmentTransaction transaction) {  
+	        if (mtodayFragment != null) {  
+	            transaction.hide(mtodayFragment);  
+	        } 
+	        if (mSetFragment != null) {  
+	            transaction.hide(mSetFragment);  
+	        }
+	        if (mForecastFragment != null) {  
+	            transaction.hide(mForecastFragment);  
+	        } 
+	        
+	    }
 
 }

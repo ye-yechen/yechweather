@@ -36,7 +36,7 @@ public class WeatherActivity extends FragmentActivity {
 	List<Fragment> fragments = new ArrayList<Fragment>();
 	// 已添加的城市名称
 	List<String> addedCities = new ArrayList<String>();
-	
+	ViewPager vp = null;
 	FragmentManager manager = getSupportFragmentManager();
 	MyFragmentAdapter adapter = new MyFragmentAdapter(manager, fragments);
 	@Override
@@ -70,7 +70,7 @@ public class WeatherActivity extends FragmentActivity {
 			locationClient.start();
 		}
 		setContentView(R.layout.main_acticity);
-
+		vp = (ViewPager) findViewById(R.id.viewPager);
 	}
 
 	/**
@@ -86,7 +86,6 @@ public class WeatherActivity extends FragmentActivity {
 		saveCityNameList(this, addedCities,"nameString");
 		//adapter = new MyFragmentAdapter(manager, fragments);
 		// 设定适配器
-		ViewPager vp = (ViewPager) findViewById(R.id.viewPager);
 		vp.setAdapter(adapter);
 	}
 
@@ -97,11 +96,9 @@ public class WeatherActivity extends FragmentActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		List<String> existCityList = loadCityNameList(WeatherActivity.this, "existCityList");
-		System.out.println("======11"+existCityList);
 		if(existCityList.size() != 0){
 			for(int i=0;i<existCityList.size();i++){
 				for (int j = 0; j < fragments.size(); j++) {
-					System.out.println("000000"+fragments.get(j).getArguments().getString("selectedCityName"));
 					if (existCityList.get(i).equals(fragments.get(j).getArguments().getString("selectedCityName"))) {
 						fragments.remove(j);
 						adapter.notifyDataSetChanged();

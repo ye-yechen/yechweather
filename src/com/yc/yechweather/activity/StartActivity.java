@@ -50,7 +50,7 @@ public class StartActivity extends Activity implements OnClickListener {
 	private List<String> existCityList = new ArrayList<String>();
 	// 当前定位城市
 	private TextView currentLoc;
-
+	private HashMap<String, Object> map = new HashMap<String, Object>();
 	// 已添加的城市
 	List<String> addedCities = new ArrayList<String>();
 
@@ -62,7 +62,7 @@ public class StartActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.start_layout);
 		editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		
 		currentLoc = (TextView) findViewById(R.id.current_location);
 		ok = (Button) findViewById(R.id.ok);
 		cancle = (Button) findViewById(R.id.cancle);
@@ -173,8 +173,9 @@ public class StartActivity extends Activity implements OnClickListener {
 					ChooseAreaActivity.class);
 			intent.putExtra("addCity", true);
 			intent.putExtra("isFromStartActivity", true);
-			startActivity(intent);
-			finish();
+			startActivityForResult(intent, 1);
+//			startActivity(intent);
+//			finish();
 			break;
 		case R.id.current_location:
 			locateToMain(Const.addedCity);
@@ -198,6 +199,18 @@ public class StartActivity extends Activity implements OnClickListener {
 		finish();
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		String cityName = data.getStringExtra("add_this_city");
+		map.put("ItemImage", R.drawable.del);// 加入图片
+		map.put("ItemText", cityName);
+		cityList.add(map);
+		// 保存城市列表
+		saveCityList(StartActivity.this, cityList,"listString");
+		simpleAdapter.notifyDataSetChanged();
+		cityListView.setSelection(0); 
+	}
 	/**
 	 * 保存城市列表
 	 * @param <T>

@@ -24,6 +24,7 @@ import com.yc.yechweather.model.City;
 import com.yc.yechweather.model.County;
 import com.yc.yechweather.model.Province;
 import com.yc.yechweather.model.YechWeatherDB;
+import com.yc.yechweather.util.Const;
 import com.yc.yechweather.util.HttpCallbackListener;
 import com.yc.yechweather.util.HttpUtil;
 import com.yc.yechweather.util.Utility;
@@ -101,7 +102,8 @@ public class ChooseAreaActivity extends Activity {
 						Intent intent = new Intent(ChooseAreaActivity.this,StartActivity.class);
 						intent.putExtra("add_success", true);
 						intent.putExtra("add_this_city", countyName);
-						startActivity(intent);
+						setResult(Const.ISFROMCHOOSEACTIVITY, intent);
+						//startActivity(intent);
 						finish();
 					} else {
 						Intent intent = new Intent(ChooseAreaActivity.this,
