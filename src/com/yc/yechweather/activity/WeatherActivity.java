@@ -23,7 +23,7 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.yc.yechweather.R;
 import com.yc.yechweather.adapter.MyFragmentAdapter;
-import com.yc.yechweather.fragment.CityWeatherFragment;
+import com.yc.yechweather.fragment.RootFragment;
 import com.yc.yechweather.util.Const;
 import com.yc.yechweather.util.Utility;
 
@@ -79,12 +79,11 @@ public class WeatherActivity extends FragmentActivity {
 	private void setLocatedFragment() {
 		Bundle args = new Bundle();
 		args.putString("selectedCityName", Const.locatedCity);
-		CityWeatherFragment fragment = CityWeatherFragment.newInstance(args);
+		RootFragment fragment = RootFragment.newInstance(args);
 		fragments.add(fragment);
 		addedCities.add(Const.locatedCity);
 		adapter.notifyDataSetChanged();
 		saveCityNameList(this, addedCities,"nameString");
-		//adapter = new MyFragmentAdapter(manager, fragments);
 		// 设定适配器
 		vp.setAdapter(adapter);
 	}
@@ -105,7 +104,6 @@ public class WeatherActivity extends FragmentActivity {
 						break;
 					}
 				}
-				//existCityList.remove(i);
 			}
 			existCityList.clear();
 			saveCityNameList(WeatherActivity.this, existCityList, "existCityList");
@@ -119,12 +117,10 @@ public class WeatherActivity extends FragmentActivity {
 					break;
 				}
 				if (i == addedCities.size() - 1) {// 列表中没有这个城市名称
-					// Const.locatedCity = cityName;
 
 					Bundle args = new Bundle();
 					args.putString("selectedCityName", cityName);
-					CityWeatherFragment fragment = CityWeatherFragment
-							.newInstance(args);
+					RootFragment fragment = RootFragment.newInstance(args);
 					fragments.add(fragment);
 					addedCities.add(cityName);
 					adapter.notifyDataSetChanged();

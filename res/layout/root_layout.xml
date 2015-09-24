@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bk1" >
 
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/rootFrame"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" >
+    </FrameLayout>
+
+    <include layout="@layout/bottom_menu_navicate"/>    
+
+</LinearLayout>

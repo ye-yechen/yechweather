@@ -109,24 +109,58 @@ public class Utility {
 			JSONObject dataObject = jsonObject.getJSONObject("data");
 			String cityName = dataObject.getString("city");
 			String currentTemp = dataObject.getString("wendu");
+			String message = dataObject.getString("ganmao");
 			JSONArray array = dataObject.getJSONArray("forecast");
+			//解析json字符串，获取当天的详细天气信息
 			JSONObject weatherInfo = array.getJSONObject(0);
 			String temp1 = weatherInfo.getString("low");
 			String temp2 = weatherInfo.getString("high");
 			String weatherDesp = weatherInfo.getString("type");
 			String publishTime = weatherInfo.getString("date");
 			saveWeatherInfo(context,cityName,temp1,temp2,currentTemp,
-									weatherDesp,publishTime);
+									weatherDesp,publishTime,message);
+			//解析json字符串，获取未来几天天气的预测(简要信息)
+			for(int i=0;i<array.length();i++){
+				JSONObject forecastInfo = array.getJSONObject(i);
+				//去掉 "低温","高温"两个字
+				String forecastTemp1 = forecastInfo.getString("low").substring(2);
+				String forecastTemp2 = forecastInfo.getString("high").substring(2);
+				String forecastWeatherDesp = forecastInfo.getString("type");
+				String forecastPublishTime = forecastInfo.getString("date");
+				saveForecastWeatherInfo(context,i,array.length(),forecastTemp1,forecastTemp2,forecastWeatherDesp,forecastPublishTime,message);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
+	 * 保存预测的天气信息
+	 * @param i : 哪一天的索引(1代表明天，2后天...)
+	 * @param length : 解析的数组的长度，代表预测的天数
+	 */
+	private static void saveForecastWeatherInfo(Context context,int i,int length, String forecastTemp1,
+			String forecastTemp2, String forecastWeatherDesp,
+			String forecastPublishTime,String message) {
+		
+		SharedPreferences.Editor editor =
+				PreferenceManager.getDefaultSharedPreferences(context).edit();
+		if(i == 0){
+			editor.putString("message", message);//为当天保存 “感冒指数”
+		}
+		editor.putInt("forecastDays", length);
+		editor.putString("forecastTemp1"+i, forecastTemp1);
+		editor.putString("forecastTemp2"+i, forecastTemp2);
+		editor.putString("forecastWeatherDesp"+i, forecastWeatherDesp);
+		editor.putString("forecastPublishTime"+i, forecastPublishTime);
+		editor.commit();
+	}
+
+	/**
 	 * 将服务器返回的所有天气信息存储到 SharedPreferences 文件
 	 */
 	private static void saveWeatherInfo(Context context, String cityName,
-			String temp1, String temp2, String currentTemp,String weatherDesp,String publishTime) {
+			String temp1, String temp2, String currentTemp,String weatherDesp,String publishTime,String message) {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日",Locale.CHINA);
 		SharedPreferences.Editor editor =
@@ -139,6 +173,7 @@ public class Utility {
 		editor.putString("weather_desp", weatherDesp);
 		editor.putString("publish_time", publishTime);
 		editor.putString("current_date", sdf.format(new Date()));
+		editor.putString("message", message);//感冒指数
 		editor.commit();
 	}
 	
