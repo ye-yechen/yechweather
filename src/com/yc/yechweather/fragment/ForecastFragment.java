@@ -1,7 +1,6 @@
 package com.yc.yechweather.fragment;
 
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -32,9 +31,12 @@ public class ForecastFragment extends Fragment {
 	private TextView temperature2;
 	private TextView temperature3;
 	private TextView temperature4;
-	private TextView temperature5;
 	//当天的感冒指数
 	private TextView message;
+	
+	//显示的城市名
+	private TextView cityName;
+	
 	public static ForecastFragment newInstance(Bundle args) {
 		ForecastFragment f = new ForecastFragment();
 		f.setArguments(args);
@@ -46,6 +48,7 @@ public class ForecastFragment extends Fragment {
 		
 		View view = inflater.inflate(R.layout.fragment_forecast_layout, container,false);
 		initView(view);
+		cityName.setText(getArguments().getString("selectedCityName"));
 		showWeather(null, temperature0, weatherType0, 0);
 		showWeather(day1, temperature1, weatherType1, 1);
 		showWeather(day2, temperature2, weatherType2, 2);
@@ -73,6 +76,7 @@ public class ForecastFragment extends Fragment {
 		temperature4 = (TextView) view.findViewById(R.id.temperature4);
 		
 		message = (TextView) view.findViewById(R.id.message);
+		cityName = (TextView) view.findViewById(R.id.city_name);
 	}
 	
 	/**

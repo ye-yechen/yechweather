@@ -222,10 +222,6 @@ public class CityWeatherFragment extends Fragment implements OnClickListener
 
 		case R.id.refresh_weather:
 			publishText.setText("ͬ同步中...");
-			SharedPreferences prefs = PreferenceManager
-					.getDefaultSharedPreferences(getParentFragment()
-							.getActivity());
-			String cityName = prefs.getString("city_name", "");
 			if (!TextUtils.isEmpty(getArguments().getString("selectedCityName"))) {
 				String address = "http://wthrcdn.etouch.cn/weather_mini?city="
 						+ getArguments().getString("selectedCityName");

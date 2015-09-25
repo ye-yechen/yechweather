@@ -256,7 +256,11 @@ public class StartActivity extends Activity implements OnClickListener {
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(this, WeatherActivity.class);
-		startActivity(intent);
+		//startActivity(intent);
+//		intent.putExtra("city_name", cityName);
+//		intent.putExtra("isLocated", true);
+//		intent.putExtra("isAddCity", true);
+		setResult(Const.ISFROMSTARTACTIVITY, intent);
 		//setResult(Const.ISFROMSTARTACTIVITY, intent);
 		finish();
 	}
