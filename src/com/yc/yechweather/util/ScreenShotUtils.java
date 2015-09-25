@@ -32,7 +32,7 @@ public class ScreenShotUtils {
         view.buildDrawingCache();  
         // 返回这个缓存视图   
         bitmap=view.getDrawingCache();  
-          
+       
         // 获取状态栏高度  
         Rect frame=new Rect();  
         // 测量屏幕宽和高  
@@ -44,6 +44,7 @@ public class ScreenShotUtils {
         // 根据坐标点和需要的宽和高创建bitmap  
         bitmap=Bitmap.createBitmap(bitmap, 0, stautsHeight, width, 
         											height-stautsHeight);  
+        view.setDrawingCacheEnabled(false);
         return bitmap;  
     }  
       

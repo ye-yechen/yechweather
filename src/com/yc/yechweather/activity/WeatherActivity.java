@@ -108,21 +108,20 @@ public class WeatherActivity extends FragmentActivity {
 			existCityList.clear();
 			saveCityNameList(WeatherActivity.this, existCityList, "existCityList");
 		}
-		String cityName="";
+		
 		//由 StartActivity 跳转过来
 		if (resultCode == Const.ISFROMSTARTACTIVITY) {
-			
+			String cityName="";
 			if(data != null){
 				cityName = data.getStringExtra("city_name");
 			}
 			System.out.println("99999"+cityName);
 			addedCities = loadCityNameList(this, "nameString");
 			for (int i = 0; i < addedCities.size(); i++) {
-				if (cityName == null || cityName.equals(addedCities.get(i))) {
+				if (cityName.equals("") || cityName.equals(addedCities.get(i))) {
 					break;
 				}
 				if (i == addedCities.size() - 1) {// 列表中没有这个城市名称
-
 					Bundle args = new Bundle();
 					args.putString("selectedCityName", cityName);
 					RootFragment fragment = RootFragment.newInstance(args);
@@ -133,9 +132,6 @@ public class WeatherActivity extends FragmentActivity {
 					break;
 				}
 			}
-		}
-		if(resultCode == Const.ISFROMCHOOSEACTIVITY){
-			
 		}
 	}
 

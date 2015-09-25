@@ -65,23 +65,27 @@ public class RootFragment extends Fragment implements OnClickListener {
 	}
 
 	private void setTabSelection(int index) {
+		
 		FragmentTransaction transaction = manager.beginTransaction();
 		hideFragments(transaction);
-		switch (index) {
+		Bundle args;
+		switch (index) { 
 		case 0:
-			if(mCityWeatherFragment == null){
-				Bundle args = new Bundle();
+			//if(mCityWeatherFragment == null){
+				System.out.println("5555555"+getArguments().getString("selectedCityName"));
+				args = new Bundle();
 				args.putString("selectedCityName",
 						getArguments().getString("selectedCityName"));
 				mCityWeatherFragment = CityWeatherFragment.newInstance(args);
 				transaction.add(R.id.rootFrame, mCityWeatherFragment);
-			} else {
-				transaction.show(mCityWeatherFragment);
-			}
+//			} else {
+//				System.out.println("44444");
+//				transaction.show(mCityWeatherFragment);
+//			}
 			break;
 		case 1:
 			if (mForecastFragment == null) {
-				Bundle args = new Bundle();
+				args = new Bundle();
 				args.putString("selectedCityName",
 						getArguments().getString("selectedCityName"));
 				mForecastFragment = ForecastFragment.newInstance(args);
@@ -123,7 +127,7 @@ public class RootFragment extends Fragment implements OnClickListener {
 			setTabSelection(1);
 			break;
 		case R.id.menu_item_mine_image:
-			String savePath = "sdcard/"+System.currentTimeMillis()+".png";
+			String savePath = "sdcard/"+System.currentTimeMillis()+".jpg";
 			ScreenShotUtils.shotBitmap(getActivity(),savePath);
 			shareIntent(savePath);
 //		case R.id.menu_item_mine_layout:
@@ -161,8 +165,8 @@ public class RootFragment extends Fragment implements OnClickListener {
                 		|| activityInfo.name.contains("com.sina.weibo")
                 		|| activityInfo.packageName.contains("renren") 
                 		|| activityInfo.name.contains("renren")
-                		|| activityInfo.packageName.contains("com.tencent") 
-                		|| activityInfo.name.contains("com.tencent")
+                		|| activityInfo.packageName.contains("com.tencent.MobileQQ") 
+                		|| activityInfo.name.contains("com.tencent.MobileQQ")
 //                		|| activityInfo.packageName.contains("com.qzone") 
 //                		|| activityInfo.name.contains("com.tencent.sc")
                 		|| activityInfo.packageName.contains("com.baidu.tiebacls3") 

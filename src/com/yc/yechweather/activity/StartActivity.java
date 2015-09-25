@@ -202,7 +202,10 @@ public class StartActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		String cityName = data.getStringExtra("add_this_city");
+		String cityName = "";
+		if(data != null){
+			cityName = data.getStringExtra("add_this_city");
+		}
 		map.put("ItemImage", R.drawable.del);// 加入图片
 		map.put("ItemText", cityName);
 		cityList.add(map);
