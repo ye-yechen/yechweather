@@ -194,7 +194,9 @@ public class RootFragment extends Fragment implements OnClickListener {
             } catch (android.content.ActivityNotFoundException ex) {
                 Toast.makeText(getActivity(), "没有可用于分享的应用", Toast.LENGTH_SHORT).show();
             }
-        }
+        } else {
+			
+		}
 	}
 	@Override
 	public void onDetach() {

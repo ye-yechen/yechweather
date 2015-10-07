@@ -105,6 +105,7 @@ public class Utility {
 	 */
 	public static void handleWeatherResponse(Context context,String response){
 		try {
+			System.out.println("kkkkkkkkk"+response);
 			JSONObject jsonObject = new JSONObject(response);
 			JSONObject dataObject = jsonObject.getJSONObject("data");
 			String cityName = dataObject.getString("city");

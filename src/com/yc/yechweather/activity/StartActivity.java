@@ -256,16 +256,16 @@ public class StartActivity extends Activity implements OnClickListener {
 	/**
 	 * 捕获 back 按键
 	 */
-	@Override
-	public void onBackPressed() {
-		Intent intent = new Intent(this, WeatherActivity.class);
-		//startActivity(intent);
-//		intent.putExtra("city_name", cityName);
-//		intent.putExtra("isLocated", true);
-//		intent.putExtra("isAddCity", true);
-		setResult(Const.ISFROMSTARTACTIVITY, intent);
-		//setResult(Const.ISFROMSTARTACTIVITY, intent);
-		finish();
-	}
+//	@Override
+//	public void onBackPressed() {
+//		Intent intent = new Intent(this, WeatherActivity.class);
+//		startActivity(intent);
+////		intent.putExtra("city_name", cityName);
+////		intent.putExtra("isLocated", true);
+////		intent.putExtra("isAddCity", true);
+//		//setResult(Const.ISFROMSTARTACTIVITY, intent);
+//		//setResult(Const.ISFROMSTARTACTIVITY, intent);
+//		finish();
+//	}
 
 }

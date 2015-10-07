@@ -29,7 +29,7 @@ public class LoadingActivity extends Activity{
                 finish();  
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);  
             }  
-        }, 2000);  
+        }, 4000);  
 	}
 
 }
